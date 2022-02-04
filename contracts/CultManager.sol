@@ -331,6 +331,7 @@ contract CultManager is Ownable {
         uint256 mod = (totalPeriodLength % target.period);
         uint256 prevPeriodEndBlock = currentBlk - mod;
         uint256 nextPeriodEndBlock = prevPeriodEndBlock + target.period;
+        console.log("Log activity: %s, prev period: %s, next period: %s", goalID, prevPeriodEndBlock, nextPeriodEndBlock);
         require(target.targetStatus == TargetStatus.RUNNING, "You can only log on goal which is in running status");
 
         uint256 periodEndBlock = prevPeriodEndBlock;

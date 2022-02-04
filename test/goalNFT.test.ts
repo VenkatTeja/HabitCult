@@ -97,7 +97,7 @@ describe("GoalNFT", function () {
                 else {
                     resolve(true)
                 }
-            })
+            }, 2000)
         })
     }
     
@@ -112,16 +112,18 @@ describe("GoalNFT", function () {
         let betAmount = web3.utils.toWei(web3.utils.toBN(10), 'mwei').toString()
         console.log({betAmount})
         
-        let NFTID = await cultManager.connect(addr1).callStatic.addGoal(name, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount)
-        console.log({NFTID})
-
         await myLib.approveToken(web3, tokenAddress, cultManager.address, betAmount, addr1)
         console.log('token approved')
+
+        let NFTID = await cultManager.connect(addr1).callStatic.addGoal(name, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount)
+        console.log({NFTID})
 
         let addGoal = await cultManager.connect(addr1).addGoal(name, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount)
         await addGoal.wait()
         console.log({NFTID})
+
         let myGoals = await cultManager.getGoals(participant.addr)
+        console.log({myGoals})
         expect(myGoals.includes(NFTID), 'Goal not in participant address')
 
         if(validators.length > 0) {
