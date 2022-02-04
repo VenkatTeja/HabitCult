@@ -7,7 +7,6 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 import "./library/CultMath.sol";
 import "./GoalNFT.sol";
-import "./CultManagerChild.sol";
 
 contract CultManager is Ownable {
     using Counters for Counters.Counter;
@@ -38,7 +37,7 @@ contract CultManager is Ownable {
     string[] public categoryIndexes;
     uint public nCategories = 0;
 
-    mapping(uint256 => CultMath.Goal) nftGoalMap;
+    mapping(uint256 => CultMath.Goal) public nftGoalMap;
     mapping(address => UserGoals) userGoalMapping;
     // mapping(address => 
 
@@ -153,6 +152,10 @@ contract CultManager is Ownable {
         }
         require(false, "User not found in this goal for the given address");
     }
+
+    // function getGoalParamsToFinalize(uint256 id) external view returns () {
+
+    // }
 
     function getGoalByID(uint256 id) external view returns (string memory name,
                                                             string memory description,
@@ -306,14 +309,35 @@ contract CultManager is Ownable {
         uint256 endBlock = target.startBlock + (target.period * target.nPeriods);
         if(endBlock == periodEndBlock) {
             // Evaluate the status of goal
+            console.log("finalizeGoal");
             finalizeGoal(goal);
         }
         return true;
     }
 
+    function getEventsRegistered(uint256 goalID, bool isParticipant) public view returns (uint64[] memory eventsRegisteredSum) {
+        CultMath.Goal storage goal = nftGoalMap[goalID];
+        CultMath.User storage participant = goal.participant;
+        CultMath.User[] storage validators = goal.validators;
+        mapping(address => uint64) storage eventsRegisteredSumMapping = goal.eventsRegisteredSum;   
+
+        if(validators.length > 0) {
+            uint64[] memory eventsRegisteredSum = new uint64[](validators.length);
+            for (uint i = 0; i<validators.length-1; i++) { 
+                CultMath.User memory validatorUser = validators[i];
+                eventsRegisteredSum[i] = eventsRegisteredSumMapping[validatorUser.addr];
+            }
+            return eventsRegisteredSum;
+        } else {
+            uint64[] memory eventsRegisteredSum = new uint64[](1);
+            eventsRegisteredSum[0] = eventsRegisteredSumMapping[participant.addr];
+            return eventsRegisteredSum;
+        }
+    }
+
     function finalizeGoal(CultMath.Goal storage goal) private returns (bool) {
-        CultManagerChild child = CultManagerChild(cultChild);
         uint64 requirement = goal.target.nPeriods * goal.target.eventsPerPeriod;
+        console.log("Requirement: %s", requirement);
         CultMath.User storage participant = goal.participant;
         CultMath.User[] storage validators = goal.validators;
         mapping(address => uint64) storage eventsRegisteredSumMapping = goal.eventsRegisteredSum;
@@ -323,20 +347,65 @@ contract CultManager is Ownable {
             for (uint i = 0; i<validators.length-1; i++) { 
                 CultMath.User memory validatorUser = validators[i];
                 eventsRegisteredSum[i] = eventsRegisteredSumMapping[validatorUser.addr];
-                result = child.finalizeGoal(requirement, CultMath.TargetType.MIN, participant, validators, eventsRegisteredSum);
             }
+            result = finalizeGoalInternal(requirement, goal.target.targetType, participant, validators, eventsRegisteredSum);
         } else {
             uint64[] memory eventsRegisteredSum = new uint64[](1);
             eventsRegisteredSum[0] = eventsRegisteredSumMapping[participant.addr];
-            result = child.finalizeGoal(requirement, CultMath.TargetType.MIN, participant, validators, eventsRegisteredSum);
+            result = finalizeGoalInternal(requirement, goal.target.targetType, participant, validators, eventsRegisteredSum);
         }
         
+        goal.result = result;
         if(result.isPass) {
             goal.target.targetStatus = CultMath.TargetStatus.SUCCESSFUL;
         } else {
             goal.target.targetStatus = CultMath.TargetStatus.FAIL;
         }
         return true;
+    }
+
+    function finalizeGoalInternal(uint64 requirement, CultMath.TargetType targetType, CultMath.User memory participant, 
+        CultMath.User[] memory validators, uint64[] memory eventsRegisteredSum) private view returns (CultMath.Result memory) {
+        uint64 passed = 0;
+        uint64 failed = 0;
+        // uint64 requirement = goal.target.nPeriods * goal.target.eventsPerPeriod;
+        uint64 votedEventsAverage = 0;
+        uint64 nVoters = 0;
+        int8 sign = 1;
+        if(targetType == CultMath.TargetType.MAX) {
+            sign = -1;
+        }
+        // console.log("Sign: %s", sign);
+        if(validators.length > 0) {
+            for (uint i = 0; i<validators.length-1; i++){
+                CultMath.User memory validatorUser = validators[i];
+                console.log("(eventsRegisteredSum: %s", eventsRegisteredSum[i]);
+                if(sign * SafeCast.toInt256(eventsRegisteredSum[i]) >= sign * SafeCast.toInt256(requirement)) {
+                    passed += 1;
+                } else {
+                    failed += 1;
+                }
+                votedEventsAverage += eventsRegisteredSum[i];
+                nVoters += 1;
+            }
+        } else {
+            console.log("(eventsRegisteredSum: %s", eventsRegisteredSum[0]);
+            if(sign * SafeCast.toInt256(eventsRegisteredSum[0]) >= sign * SafeCast.toInt256(requirement)) {
+                passed += 1;
+            } else {
+                failed += 1;
+            }
+            votedEventsAverage += eventsRegisteredSum[0];
+            nVoters += 1;
+        }
+        
+        console.log("passed: %s, failed: %s", passed, failed);
+        CultMath.Result memory result;
+        bool isPassBool = passed * 1000 >= ((passed + failed) * 500);
+        console.log("left: %s, right: %s, isPass: %s", passed * 1000, ((passed + failed) * 500), isPassBool);
+        result.isPass = isPassBool;
+        result.eventsRegisteredAvg1000x = SafeMath.div((votedEventsAverage * 1000), nVoters * 1000);
+        return result;
     }
     
 }

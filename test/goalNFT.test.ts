@@ -6,8 +6,7 @@ import * as myLib from './lib'
 import { BigNumber } from "ethers";
 import { resolve } from "dns";
 import { rejects } from "assert";
-
-const Web3 = require('web3');
+import Web3 from 'web3'
 
 const web3 = new Web3("http://localhost:8545");
 
@@ -35,7 +34,7 @@ describe("GoalNFT", function () {
         console.debug({bal1: await myLib.getTokenBalance(web3, tokenAddress, addr1.address)})
         await myLib.swapEthForTokens(web3, 10, tokenAddress, addr1, addr1.address)
         let newBal = web3.utils.fromWei(await myLib.getTokenBalance(web3, tokenAddress, addr1.address), 'mwei') // 6 decimals token
-        expect(newBal > 0, 'Token not filled')
+        expect(parseFloat(newBal) > 0, 'Token not filled')
         console.debug({newBal})
 
         // Initiate contracts
@@ -80,28 +79,40 @@ describe("GoalNFT", function () {
         await transfer.wait()
     })
 
-    it("Goal: Participant only - pass", async function () {
-        await checkGoal(user1, [], 10, 2, 2, 0, [3, 2])
+    it("Goal: Participant only - should pass", async function () {
+        await checkGoal(user1, [], 10, 2, 2, 0, [3, 2], true)
     })
 
-    function logActivity(goalID: BigNumber, period: number, max: number, activityLog: number[], c: number = 0, i=0) {
+    it("Goal: Participant only - should fail", async function () {
+        await checkGoal(user1, [], 5, 2, 2, 0, [3, 0], false)
+    })
+
+    it("Goal: 1 Validator only - should fail", async function () {
+        await checkGoal(user1, [ownerUser], 5, 2, 2, 0, [3, 0], false)
+    })
+
+    function logActivity(goalID: BigNumber,  periodEndingsByBlock: any[], activityLog: number[], c: number = 0) {
         return new Promise(async (resolve, reject) => {
-            if((i-1) % period == 0) {
+            let currentBlock = await web3.eth.getBlockNumber()
+            console.log({currentBlock, c})
+            if(currentBlock > periodEndingsByBlock[c].toNumber()) {
+                console.log('logging activity')
                 let logActivity = await cultManager.connect(addr1).logActivity(goalID, activityLog[c])
                 await logActivity.wait()
                 c++;
             }
             setTimeout(async () => {
-                if( (i+1) < max)
-                    resolve(await logActivity(goalID, period, max, activityLog, c, i+1))
+                if( (c) < periodEndingsByBlock.length) 
+                    resolve(await logActivity(goalID, periodEndingsByBlock, activityLog, c))
                 else {
+                    console.log('Returning logActivity')
                     resolve(true)
                 }
             }, 2000)
         })
     }
     
-    async function checkGoal(participant: any, validators: any[], period: number, eventsPerPeriod: number, nPeriods: number, targetType: number, activityLog: number[]) {
+    async function checkGoal(participant: any, validators: any[], period: number, eventsPerPeriod: number, nPeriods: number, targetType: number, activityLog: number[], isPass: boolean) {
         
         // console.log('before decode')
         // await cultManager.decodeUser([user]);
@@ -143,12 +154,14 @@ describe("GoalNFT", function () {
         let target = await cultManager.getGoalTargetByID(NFTID)
         expect(target.targetStatus == 1, 'Expected 1 (RUNNING) target status now')
 
-        console.log({getPeriodEndingsByBlock: await cultManager.getPeriodEndingsByBlock(NFTID)})
+        let periodEndingsByBlock = await cultManager.getPeriodEndingsByBlock(NFTID)
+        console.log({periodEndingsByBlock})
 
-        await logActivity(NFTID, period, period * nPeriods, activityLog)
+        await logActivity(NFTID, periodEndingsByBlock, activityLog)
 
         let result = await cultManager.getGoalResult(NFTID);
         console.log({result})
+        expect(result.isPass).to.equal(isPass);
     }
 
     
