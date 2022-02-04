@@ -2,12 +2,12 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
+import "./library/CultMath.sol";
 import "./GoalNFT.sol";
+import "./CultManagerChild.sol";
 
 contract CultManager is Ownable {
     using Counters for Counters.Counter;
@@ -15,53 +15,7 @@ contract CultManager is Ownable {
 
     address public nft;
     address public staker;
-
-    enum TargetType{ MIN, MAX }
-    enum TargetStatus{ OFF, RUNNING, SUCCESSFUL, FAIL }
-
-    struct Vote {
-        bool voted;
-        uint64 events;
-    }
-
-    struct Target {
-        uint256 startBlock;
-        uint64 nPeriods;
-        uint64 period; // number of blocks to consider as period
-        uint64 eventsPerPeriod; // max number of events to perform per period to reach goal
-        TargetType targetType;
-        uint256 betAmount;
-        TargetStatus targetStatus;
-    }
-
-    struct PeriodVoteMapping {
-        mapping(uint256 => Vote) periodVoteMapping;
-    }
-
-    struct User {
-        string nick;
-        address addr;
-    }
-
-    struct Result {
-        bool isPass;
-        uint256 eventsRegisteredAvg1000x;
-    }
-    
-    struct Goal {
-        string name;
-        string description;
-        string category;
-        User participant;
-        User[] validators;
-        uint256 validatorNFT;
-        mapping(address => UserInfo) goalUserInfo;
-        Target target;        
-        mapping(address => PeriodVoteMapping) eventsRegisteredPerPeriodMapping;
-        mapping(address => uint64) eventsRegisteredSum;
-
-        Result result;
-    }
+    address public cultChild;
 
     struct Category {
         string name;
@@ -84,7 +38,7 @@ contract CultManager is Ownable {
     string[] public categoryIndexes;
     uint public nCategories = 0;
 
-    mapping(uint256 => Goal) nftGoalMap;
+    mapping(uint256 => CultMath.Goal) nftGoalMap;
     mapping(address => UserGoals) userGoalMapping;
     // mapping(address => 
 
@@ -171,8 +125,8 @@ contract CultManager is Ownable {
         return userGoalMapping[_address].validators;
     }
 
-    function getGoalResult(uint256 id) external view returns (Result memory) {
-        Goal storage goal = nftGoalMap[id];
+    function getGoalResult(uint256 id) external view returns (CultMath.Result memory) {
+        CultMath.Goal storage goal = nftGoalMap[id];
         return goal.result;
     }
 
@@ -180,19 +134,19 @@ contract CultManager is Ownable {
                                                             uint64 nPeriods,
                                                             uint64 period, // number of blocks to consider as period
                                                             uint64 eventsPerPeriod, // max number of events to perform per period to reach goal
-                                                            TargetType targetType,
+                                                            CultMath.TargetType targetType,
                                                             uint256 betAmount,
-                                                            TargetStatus targetStatus) {
-        Goal storage goal = nftGoalMap[id];
-        Target storage target = goal.target;
+                                                            CultMath.TargetStatus targetStatus) {
+        CultMath.Goal storage goal = nftGoalMap[id];
+        CultMath.Target storage target = goal.target;
         return (target.startBlock, target.nPeriods, target.period, target.eventsPerPeriod, target.targetType, target.betAmount, target.targetStatus);
     }
 
     function getNickByGoalID(uint256 id, address addr) external view returns (string memory) {
-        Goal storage goal = nftGoalMap[id];
+        CultMath.Goal storage goal = nftGoalMap[id];
         address[] memory addrs = new address[](goal.validators.length);
         for (uint i=0; i<goal.validators.length; i++) {
-            User memory user = goal.validators[i];
+            CultMath.User memory user = goal.validators[i];
             if(addr == user.addr) {
                 return user.nick;
             }
@@ -206,10 +160,10 @@ contract CultManager is Ownable {
                                                             address participant,
                                                             address[] memory validators,
                                                             uint256 validatorNFT) {
-        Goal storage goal = nftGoalMap[id];
+        CultMath.Goal storage goal = nftGoalMap[id];
         address[] memory addrs = new address[](goal.validators.length);
         for (uint i=0; i<goal.validators.length; i++) {
-            User memory user = goal.validators[i];
+            CultMath.User memory user = goal.validators[i];
             addrs[i] = user.addr;
         }
         return (goal.name, goal.description, goal.category, goal.participant.addr, addrs, goal.validatorNFT);
@@ -222,8 +176,8 @@ contract CultManager is Ownable {
         return true;
     }
 
-    function addGoal(string memory name,  string memory category, User memory participantUser,
-         User[] memory validatorUsers, uint64 period, uint64 eventsPerPeriod, uint64 nPeriods, TargetType targetType, uint256 betAmount) public returns (uint256) {
+    function addGoal(string memory name,  string memory category, CultMath.User memory participantUser,
+        CultMath.User[] memory validatorUsers, uint64 period, uint64 eventsPerPeriod, uint64 nPeriods, CultMath.TargetType targetType, uint256 betAmount) public returns (uint256) {
         console.log("addGoal");
         require(categories[category].exists, "Category does not exist.");
         console.log("Category exists");
@@ -244,7 +198,7 @@ contract CultManager is Ownable {
         uint256 id = _goalIds.current();
         console.log("New Goal ID: %s", id);
         
-        Goal storage goal = nftGoalMap[id];
+        CultMath.Goal storage goal = nftGoalMap[id];
         goal.name = name;
         goal.description = "";
         goal.category = category;
@@ -253,40 +207,40 @@ contract CultManager is Ownable {
         userGoalMapping[participantUser.addr].participant.push(id);
         goal.goalUserInfo[participantUser.addr].isParticipant = true;
 
-        Target storage target = goal.target;
+        CultMath.Target storage target = goal.target;
         target.startBlock = block.number;
         target.nPeriods = nPeriods;
         target.period = period;
         target.eventsPerPeriod = eventsPerPeriod;
         target.targetType = targetType;
         target.betAmount = betAmount;
-        target.targetStatus = TargetStatus.RUNNING;
+        target.targetStatus = CultMath.TargetStatus.RUNNING;
         
         _setGoalUsers(id, validatorUsers);
         
         return id;
     }
 
-    function decodeUser(User[] memory users) public returns (bool) {
+    function decodeUser(CultMath.User[] memory users) public returns (bool) {
         // User memory user1 = abi.decode(user, (User));
         return true;
     }
 
-    function _setGoalUsers(uint256 goalID, User[] memory validatorUsers) private returns (bool) {
-        Goal storage goal = nftGoalMap[goalID];
+    function _setGoalUsers(uint256 goalID, CultMath.User[] memory validatorUsers) private returns (bool) {
+        CultMath.Goal storage goal = nftGoalMap[goalID];
 
         console.log("_setGoalUsers start");
 
         address[] memory validatorAddrs = new address[](validatorUsers.length);
         for (uint i=0; i<validatorUsers.length; i++) {
-            User memory validatorUser = validatorUsers[i];
+            CultMath.User memory validatorUser = validatorUsers[i];
             validatorAddrs[i] = validatorUser.addr;
-            goal.validators.push(User({addr: validatorUser.addr, nick: validatorUser.nick}));
+            goal.validators.push(CultMath.User({addr: validatorUser.addr, nick: validatorUser.nick}));
         }
         console.log("Validators length: %s", goal.validators.length);
 
         for (uint i=0; i<goal.validators.length; i++) {
-            User memory validatorUser = goal.validators[i];
+            CultMath.User memory validatorUser = goal.validators[i];
             userGoalMapping[validatorUser.addr].validators.push(goalID);
             goal.goalUserInfo[validatorUser.addr].isValidator = true;
         }
@@ -295,8 +249,8 @@ contract CultManager is Ownable {
     }
 
     function getPeriodEndingsByBlock(uint256 goalID) external view returns (uint256[] memory) {
-        Goal storage goal = nftGoalMap[goalID];
-        Target storage target = goal.target;
+        CultMath.Goal storage goal = nftGoalMap[goalID];
+        CultMath.Target storage target = goal.target;
         uint length = target.nPeriods;
         uint256[] memory blocks = new uint256[](length);
         for (uint i=0; i<target.nPeriods; i++) {
@@ -307,8 +261,8 @@ contract CultManager is Ownable {
     }
 
     function currentBlockToLog(uint256 goalID) external view returns (uint256) {
-        Goal storage goal = nftGoalMap[goalID];
-        Target storage target = goal.target;
+        CultMath.Goal storage goal = nftGoalMap[goalID];
+        CultMath.Target storage target = goal.target;
         uint256 currentBlk = block.number;
         uint256 totalPeriodLength = currentBlk - target.startBlock;
         uint256 mod = (totalPeriodLength % target.period);
@@ -317,22 +271,28 @@ contract CultManager is Ownable {
         return prevPeriodEndBlock;
     }
 
-    function logActivity(uint256 goalID, uint64 events) external returns (bool) {
-        Goal storage goal = nftGoalMap[goalID];
+    function validateGoalAccess(uint256 goalID) internal view returns (bool) {
+        CultMath.Goal storage goal = nftGoalMap[goalID];
         bool isParticipant = goal.goalUserInfo[msg.sender].isParticipant;
         bool isValidator = goal.goalUserInfo[msg.sender].isValidator;
         require(isParticipant || isValidator, "You must be a Participant or validator to log activity for this goal");
+        return true;
+    }
+
+    function logActivity(uint256 goalID, uint64 events) external returns (bool) {
+        validateGoalAccess(goalID);
         require(events >= 0, "Events should be >= 0");
-        mapping(uint256 => Vote) storage votes = goal.eventsRegisteredPerPeriodMapping[msg.sender].periodVoteMapping;
+        CultMath.Goal storage goal = nftGoalMap[goalID];
+        mapping(uint256 => CultMath.Vote) storage votes = goal.eventsRegisteredPerPeriodMapping[msg.sender].periodVoteMapping;
         
-        Target storage target = goal.target;
+        CultMath.Target storage target = goal.target;
         uint256 currentBlk = block.number;
         uint256 totalPeriodLength = currentBlk - target.startBlock;
         uint256 mod = (totalPeriodLength % target.period);
         uint256 prevPeriodEndBlock = currentBlk - mod;
         uint256 nextPeriodEndBlock = prevPeriodEndBlock + target.period;
         console.log("Log activity: %s, prev period: %s, next period: %s", goalID, prevPeriodEndBlock, nextPeriodEndBlock);
-        require(target.targetStatus == TargetStatus.RUNNING, "You can only log on goal which is in running status");
+        require(target.targetStatus == CultMath.TargetStatus.RUNNING, "You can only log on goal which is in running status");
 
         uint256 periodEndBlock = prevPeriodEndBlock;
         require(!votes[periodEndBlock].voted, "Already voted for this period");
@@ -340,57 +300,43 @@ contract CultManager is Ownable {
 
         votes[periodEndBlock].events = events;
         votes[periodEndBlock].voted = true;
-
+        
         goal.eventsRegisteredSum[msg.sender] += events;
 
         uint256 endBlock = target.startBlock + (target.period * target.nPeriods);
-        if(endBlock == currentBlk) {
+        if(endBlock == periodEndBlock) {
             // Evaluate the status of goal
-            if(isPass(goal)) {
-                goal.target.targetStatus = TargetStatus.SUCCESSFUL;
-            } else {
-                goal.target.targetStatus = TargetStatus.FAIL;
-            }
-
+            finalizeGoal(goal);
         }
         return true;
     }
 
-    function isPass(Goal storage goal) private returns (bool) {
-        uint64 passed = 0;
-        uint64 failed = 0;
-
+    function finalizeGoal(CultMath.Goal storage goal) private returns (bool) {
+        CultManagerChild child = CultManagerChild(cultChild);
         uint64 requirement = goal.target.nPeriods * goal.target.eventsPerPeriod;
-        uint64 votedEventsAverage = 0;
-        uint64 nVoters = 0;
-        int8 sign = 1;
-        if(goal.target.targetType == TargetType.MAX) {
-            sign = -1;
-        }
-        if(goal.validators.length > 0) {
-            for (uint i = 0; i<goal.validators.length-1; i++){
-                User memory validatorUser = goal.validators[i];
-                if(sign * SafeCast.toInt256(goal.eventsRegisteredSum[validatorUser.addr]) >= sign * SafeCast.toInt256(requirement)) {
-                    passed += 1;
-                } else {
-                    failed += 1;
-                }
-                votedEventsAverage += goal.eventsRegisteredSum[validatorUser.addr];
-                nVoters += 1;
+        CultMath.User storage participant = goal.participant;
+        CultMath.User[] storage validators = goal.validators;
+        mapping(address => uint64) storage eventsRegisteredSumMapping = goal.eventsRegisteredSum;
+        CultMath.Result memory result;
+        if(validators.length > 0) {
+            uint64[] memory eventsRegisteredSum = new uint64[](validators.length);
+            for (uint i = 0; i<validators.length-1; i++) { 
+                CultMath.User memory validatorUser = validators[i];
+                eventsRegisteredSum[i] = eventsRegisteredSumMapping[validatorUser.addr];
+                result = child.finalizeGoal(requirement, CultMath.TargetType.MIN, participant, validators, eventsRegisteredSum);
             }
         } else {
-            if(sign * SafeCast.toInt256(goal.eventsRegisteredSum[goal.participant.addr]) >= sign * SafeCast.toInt256(requirement)) {
-                passed += 1;
-            } else {
-                failed += 1;
-            }
-            votedEventsAverage += goal.eventsRegisteredSum[goal.participant.addr];
-            nVoters += 1;
+            uint64[] memory eventsRegisteredSum = new uint64[](1);
+            eventsRegisteredSum[0] = eventsRegisteredSumMapping[participant.addr];
+            result = child.finalizeGoal(requirement, CultMath.TargetType.MIN, participant, validators, eventsRegisteredSum);
         }
-
-        bool isPassBool = passed * 1000 >= ((passed + failed) * 500);
-        goal.result.isPass = isPassBool;
-        goal.result.eventsRegisteredAvg1000x = SafeMath.div((votedEventsAverage * 1000), nVoters * 1000);
-        return isPassBool;
+        
+        if(result.isPass) {
+            goal.target.targetStatus = CultMath.TargetStatus.SUCCESSFUL;
+        } else {
+            goal.target.targetStatus = CultMath.TargetStatus.FAIL;
+        }
+        return true;
     }
+    
 }

@@ -52,6 +52,7 @@ async function sendTx(web3: Web3, account: SignerWithAddress, toAddr: string, da
         "nonce": count
     };
     let tx = await account.sendTransaction(rawTransaction);
+    await tx.wait(1)
 }
 
 export async function approveToken(web3: Web3, tokenAddr: string, spenderAddr: string, amount: string, account: SignerWithAddress) {
