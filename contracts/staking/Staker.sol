@@ -8,18 +8,18 @@ interface BeefyInterface {
 }
 
 contract Staker {
+    address private beefyVaultAddress = 0x108c7a293162Adff86DA216AB5F91e56723125dc;
 
     function stake() external payable {
-        BeefyInterface beefy = BeefyInterface(0x108c7a293162Adff86DA216AB5F91e56723125dc);
-        beefy.approve(0x108c7a293162Adff86DA216AB5F91e56723125dc, 3);
+        BeefyInterface beefy = BeefyInterface(beefyVaultAddress); 
+        beefy.approve(beefyVaultAddress, 3);
         beefy.deposit(msg.value);
     }
 
     function withdraw() external {
-        // do nothing
     }
 
     function deposit() external payable {
-         
+         // can be called to deposit funds to the contract 
     }
 }
