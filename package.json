@@ -5,12 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-<<<<<<< Updated upstream
-    "ganache": "ganache-cli -d -m \"sorry tumble insect until gift boat crucial until excite cinnamon jungle dawn\" -b 3 --networkId 1415 --chainId 115 -k istanbul"
-=======
     "ganache": "ganache-cli -d -m \"sorry tumble insect until gift boat crucial until excite cinnamon jungle dawn\" -b 3 --networkId 1415 --chainId 115 -k istanbul",
-    "hardhat-node": "npx hardhat node --fork https://speedy-nodes-nyc.moralis.io/e814489705c92e61b62a5fbc/polygon/mainnet/archive"
->>>>>>> Stashed changes
+    "hardhat-node": "npx hardhat node --fork https://speedy-nodes-nyc.moralis.io/980209aa4755fb679b788043/polygon/mainnet/archive"
   },
   "keywords": [
     "crypto",
