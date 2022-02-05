@@ -11,7 +11,6 @@ export async function swapEthForTokens(web3: Web3, ethAmount: number, tokenAddre
     let routerAddr = "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506"
     let abi: any = routerABI.abi;
     let router = new web3.eth.Contract(abi, routerAddr)
-    console.log({toAddr})
     var data = router.methods.swapExactETHForTokens(
         web3.utils.toHex(0),
         [matic, tokenAddress],

@@ -15,6 +15,7 @@ interface User {
     addr: string
 }
 
+
 describe("GoalNFT", function () {
     let owner: SignerWithAddress, addr1: SignerWithAddress, addr2: SignerWithAddress, addr3: SignerWithAddress;
     let goalNFT: GoalNFT
