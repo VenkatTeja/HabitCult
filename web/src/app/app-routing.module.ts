@@ -4,14 +4,9 @@ import { AuthGuard } from './auth/guards/auth-guard';
 import { CreateGoalComponent } from './create-goal/create-goal.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { GoalProgressComponent } from './goal-progress/goal-progress.component';
-import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  {
-    path: 'home',
-    component: HomeComponent,
-  },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
     component: DashboardComponent,
