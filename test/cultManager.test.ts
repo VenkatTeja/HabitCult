@@ -1,13 +1,16 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import * as myLib from './lib';
 
 describe("CultManager", function () {
+  let token = myLib.TOKENS.USDT
+
   it("Add/Remove category", async function () {
     const [owner, addr1] = await ethers.getSigners();
 
     // deploy contract
     const CultManager = await ethers.getContractFactory("CultManager");
-    const cultManager = await CultManager.deploy();
+    const cultManager = await CultManager.deploy(token.addr);
     await cultManager.deployed();
 
     // add and remove categories from owner
@@ -57,3 +60,4 @@ describe("CultManager", function () {
 
   })
 });
+

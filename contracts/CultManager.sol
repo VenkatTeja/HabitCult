@@ -306,11 +306,32 @@ contract CultManager is Ownable {
         
         goal.eventsRegisteredSum[msg.sender] += events;
 
+        console.log("log activity user: %s", msg.sender);
+        console.log("log activity user log: %s", goal.eventsRegisteredSum[msg.sender]);
+
         uint256 endBlock = target.startBlock + (target.period * target.nPeriods);
         if(endBlock == periodEndBlock) {
             // Evaluate the status of goal
-            console.log("finalizeGoal");
-            finalizeGoal(goal);
+            uint64 nVoters = 0;
+            mapping(uint256 => CultMath.Vote) storage votes1 = goal.eventsRegisteredPerPeriodMapping[goal.participant.addr].periodVoteMapping;
+            if(votes1[periodEndBlock].voted) {
+                console.log("participant voted");
+                nVoters = 1;
+            }
+            for (uint i = 0; i<goal.validators.length; i++) { 
+                console.log("checking validators: %s", i);
+                CultMath.User memory validatorUser = goal.validators[i];
+                mapping(uint256 => CultMath.Vote) storage votes2 = goal.eventsRegisteredPerPeriodMapping[validatorUser.addr].periodVoteMapping;
+                if(votes2[periodEndBlock].voted) {
+                    console.log("validator voted");
+                    nVoters += 1;
+                }
+            }
+            console.log("Should finalize: nVoters: %s / ", nVoters, (1 + goal.validators.length));
+            if(nVoters == (1 + goal.validators.length)) {
+                console.log("finalizeGoal");
+                finalizeGoal(goal);
+            }
         }
         return true;
     }
@@ -342,10 +363,12 @@ contract CultManager is Ownable {
         CultMath.User[] storage validators = goal.validators;
         mapping(address => uint64) storage eventsRegisteredSumMapping = goal.eventsRegisteredSum;
         CultMath.Result memory result;
+        console.log("Validators length: %s", validators.length);
         if(validators.length > 0) {
             uint64[] memory eventsRegisteredSum = new uint64[](validators.length);
-            for (uint i = 0; i<validators.length-1; i++) { 
+            for (uint i = 0; i<validators.length; i++) { 
                 CultMath.User memory validatorUser = validators[i];
+                console.log('eventsRegisteredSumMapping: %s - #%s', i, eventsRegisteredSumMapping[validatorUser.addr]);
                 eventsRegisteredSum[i] = eventsRegisteredSumMapping[validatorUser.addr];
             }
             result = finalizeGoalInternal(requirement, goal.target.targetType, participant, validators, eventsRegisteredSum);
@@ -377,7 +400,7 @@ contract CultManager is Ownable {
         }
         // console.log("Sign: %s", sign);
         if(validators.length > 0) {
-            for (uint i = 0; i<validators.length-1; i++){
+            for (uint i = 0; i<validators.length; i++){
                 CultMath.User memory validatorUser = validators[i];
                 console.log("(eventsRegisteredSum: %s", eventsRegisteredSum[i]);
                 if(sign * SafeCast.toInt256(eventsRegisteredSum[i]) >= sign * SafeCast.toInt256(requirement)) {
@@ -399,12 +422,13 @@ contract CultManager is Ownable {
             nVoters += 1;
         }
         
+        console.log("votedEventsAverage: %s, nVoters: %s", votedEventsAverage, nVoters);
         console.log("passed: %s, failed: %s", passed, failed);
         CultMath.Result memory result;
         bool isPassBool = passed * 1000 >= ((passed + failed) * 500);
         console.log("left: %s, right: %s, isPass: %s", passed * 1000, ((passed + failed) * 500), isPassBool);
         result.isPass = isPassBool;
-        result.eventsRegisteredAvg1000x = SafeMath.div((votedEventsAverage * 1000), nVoters * 1000);
+        result.eventsRegisteredAvg1000x = SafeMath.div((votedEventsAverage * 1000), nVoters);
         return result;
     }
     

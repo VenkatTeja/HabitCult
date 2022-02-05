@@ -11,8 +11,7 @@ const web3 = new Web3("http://localhost:8545");
 
 describe("Staker", function () {
     let owner: SignerWithAddress, addr1: SignerWithAddress;
-    // let tokenAddress = "0xc2132d05d31c914a87c6611c10748aeb04b58e8f" // USDT, 6 decimals
-    let tokenAddress = "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063" // DAI, 18 decimals
+    let token = myLib.TOKENS.DAI
     let staker: Staker
 
     const init = async () => {
@@ -31,9 +30,9 @@ describe("Staker", function () {
         // FILL token in signer wallet
         // We use uniswap here to swap the matic tokens in addr1 to DAI (token of tokenAddress above) and send it to staker contract
         // Staker contract will need these tokens to send to beefy
-        console.debug({beforeBal: await myLib.getTokenBalance(web3, tokenAddress, staker.address)})
-        await myLib.swapEthForTokens(web3, 20, tokenAddress, addr1, staker.address)
-        let newBal = web3.utils.fromWei(await myLib.getTokenBalance(web3, tokenAddress, staker.address), 'ether') // 18 decimals token
+        console.debug({beforeBal: await myLib.getTokenBalance(web3, token.addr, staker.address)})
+        await myLib.swapEthForTokens(web3, 20, token.addr, addr1, staker.address)
+        let newBal = web3.utils.fromWei(await myLib.getTokenBalance(web3, token.addr, staker.address))
         console.debug({newBal})
         expect(newBal > 0, 'Token not filled')
     }
