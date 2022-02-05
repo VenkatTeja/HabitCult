@@ -13,6 +13,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { CreateGoalComponent } from './create-goal/create-goal.component';
 import { GoalProgressComponent } from './goal-progress/goal-progress.component';
 import { EndOfGoalComponent } from './end-of-goal/end-of-goal.component';
+import { UpcomingTasksComponent } from './goal-progress/upcoming-tasks/upcoming-tasks.component';
+import { HistoryComponent } from './goal-progress/history/history.component';
+import { ContractService } from './services/contract.service';
+import { MetamaskMissingComponent } from './metamask-missing/metamask-missing.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +28,9 @@ import { EndOfGoalComponent } from './end-of-goal/end-of-goal.component';
     CreateGoalComponent,
     GoalProgressComponent,
     EndOfGoalComponent,
+    UpcomingTasksComponent,
+    HistoryComponent,
+    MetamaskMissingComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,7 +39,7 @@ import { EndOfGoalComponent } from './end-of-goal/end-of-goal.component';
     MatIconModule,
     MatButtonModule,
   ],
-  providers: [],
+  providers: [ContractService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -33,8 +33,11 @@
                         <li><a class="dropdown-item" href="#">Hathor</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <button class="btn btn-outline-primary" style="font-size: 14px;" type="submit">CONNECT</button>
+                <li class="nav-item" *ngIf="!accountAddress">
+                    <button class="btn btn-outline-primary" (click)="connect()" style="font-size: 14px;" type="submit">CONNECT</button>
+                </li>
+                <li class="nav-item" *ngIf="accountAddress">
+                    <button class="btn btn-outline-primary" (click)="connect()" style="font-size: 14px;" type="submit">{{accountAddress.slice(35)}}</button>
                 </li>
             </ul>
         </div>
