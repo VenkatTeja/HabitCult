@@ -6,19 +6,25 @@ declare global {
   interface Window { ethereum: any; }
 }
 
+// import { ContractService } from '../services/contract.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  accountAddress: string | null = null;
+
   constructor(public globalService: GlobalService) {
 
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+  }
 
   async connectMetamask() {
     await this.globalService.connectMetamask()
   }
+
 }

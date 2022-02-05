@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HomeComponent } from './home.component';
+import { MetamaskMissingComponent } from './metamask-missing.component';
 
-describe('HomeComponent', () => {
-  let component: HomeComponent;
-  let fixture: ComponentFixture<HomeComponent>;
+describe('MetamaskMissingComponent', () => {
+  let component: MetamaskMissingComponent;
+  let fixture: ComponentFixture<MetamaskMissingComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HomeComponent ]
+      declarations: [ MetamaskMissingComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HomeComponent);
+    fixture = TestBed.createComponent(MetamaskMissingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

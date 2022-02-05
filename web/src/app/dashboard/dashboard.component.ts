@@ -23,7 +23,21 @@ export class DashboardComponent implements OnInit {
     console.log({goalIDs})
   }
 
+  goals = [
+    {
+      goalName: 'Sample 1',
+    },
+    {
+      goalName: 'Sample 2',
+    },
+  ];
+
+
   navigate() {
     this.router.navigate(['create-goal']);
+  }
+
+  goalPage(i: number) {
+    this.router.navigate([`goal-progress/${i}`]);
   }
 }

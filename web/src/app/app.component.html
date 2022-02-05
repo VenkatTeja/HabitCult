@@ -1,7 +1,12 @@
 <div>
-    <app-header></app-header>
-    <div class="container-fluid">
-        <router-outlet></router-outlet>
-        <!-- <app-dashboard></app-dashboard> -->
+    <div *ngIf="isMetamask">
+        <app-header></app-header>
+        <div class="container-fluid">
+            <router-outlet></router-outlet>
+            <!-- <app-dashboard></app-dashboard> -->
+        </div>
+    </div>
+    <div *ngIf="!isMetamask">
+        <metamask-missing></metamask-missing>
     </div>
 </div>
