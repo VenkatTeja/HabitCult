@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CreateGoalComponent } from './create-goal/create-goal.component';
 import { GoalProgressComponent } from './goal-progress/goal-progress.component';
 import { EndOfGoalComponent } from './end-of-goal/end-of-goal.component';
+import { GlobalService } from './global.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import { EndOfGoalComponent } from './end-of-goal/end-of-goal.component';
     MatIconModule,
     MatButtonModule,
   ],
-  providers: [],
+  providers: [GlobalService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

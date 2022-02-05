@@ -23,14 +23,14 @@ contract GoalNFT is ERC721URIStorage, Ownable {
     }
 
 
-    function mintNFT(address[] memory recipients)
+    function mintNFT(address[] memory recipients, string memory tokenURI)
         public onlyOwner
         returns (uint256)
     {
         _tokenIds.increment();
 
         uint256 newItemId = _tokenIds.current();
-        string memory tokenURI = string(abi.encodePacked(baseUrl, Strings.toString(newItemId)));
+        // string memory tokenURI = string(abi.encodePacked(baseUrl, Strings.toString(newItemId)));
 
         for (uint i=0; i<recipients.length; i++) {
             address recipient = recipients[i];

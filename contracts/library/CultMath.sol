@@ -44,8 +44,10 @@ library CultMath {
 
     struct Goal {
         string name;
-        string description;
+        string objectiveInWords;
         string category;
+        uint256 nft;
+        address creator;
         User participant;
         User[] validators;
         uint256 validatorNFT;

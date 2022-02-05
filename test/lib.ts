@@ -110,6 +110,5 @@ export const includesBigNumber = (arr: BigNumber[], item: BigNumber) => {
     arr.forEach(arrNum => {
         arrNums.push(arrNum.toNumber())
     })
-    return false;
-    // return arrNums.includes(item.toNumber())
+    return arrNums.includes(item.toNumber())
 }

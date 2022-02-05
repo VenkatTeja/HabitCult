@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { GlobalService } from '../global.service';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -7,9 +9,20 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  constructor(private router: Router) {}
 
-  ngOnInit(): void {}
+  constructor(private router: Router, private globalService: GlobalService) {}
+  
+  ngOnInit(): void {
+    this.refreshGoals()
+  }
+
+  async refreshGoals() {
+    await this.globalService.waitForConnect()
+    console.log(await this.globalService.signer.getAddress())
+    let goalIDs = await this.globalService.CultManagerContract.functions.getGoals(await this.globalService.signer.getAddress());
+    console.log({goalIDs})
+  }
+
   navigate() {
     this.router.navigate(['create-goal']);
   }

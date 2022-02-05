@@ -34,7 +34,8 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <button class="btn btn-outline-primary" style="font-size: 14px;" type="submit">CONNECT</button>
+                    <button class="btn btn-outline-primary" style="font-size: 14px;" type="submit" (click)="connectMetamask()" *ngIf="globalService.accounts.length==0">CONNECT</button>
+                    <button class="btn btn-outline-primary" style="font-size: 14px;" type="submit" (click)="connectMetamask()" *ngIf="globalService.accounts.length>0">{{globalService.accounts[0].substring(0, 4)}}...{{globalService.accounts[0].substring(globalService.accounts[0].length-4)}}</button>
                 </li>
             </ul>
         </div>

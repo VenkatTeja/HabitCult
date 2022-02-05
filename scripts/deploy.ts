@@ -53,6 +53,14 @@ async function main() {
   console.log('=============================\n')
   console.log("Use the following address to easily interact while testing")
   console.log(`>> ${user.address}`)
+
+  // add category
+  let addCategory2Tx = await cultManager.addCategory('book-reading', 'Book Reading', 'How many hours you read in a week?', 'hi', 'hi');
+  await addCategory2Tx.wait();
+
+  // set NFT address
+  let setNFT = await cultManager.setNFTAddress(goalNFT.address);
+  await setNFT.wait();
 }
 
 // We recommend this pattern to be able to use async/await everywhere
