@@ -2,31 +2,18 @@
     <div class="col-8">
         <div class="container-fluid">
             <div class="row row-cols-3">
-                <div class="card text-white m-2" style="max-width: 18rem; background-color: #2E2E2F;">
+                <div *ngFor="let goal of goals;let i = index" class="card text-white m-2"
+                    style="max-width: 18rem; background-color: #2E2E2F;" (click)="goalPage(i)">
                     <div class="card-body">
-                        <h5 class="card-title">Goal One</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                        <h5 class="card-title">{{goal.goalName}}</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                            of
                             the
                             card's content.</p>
                     </div>
                 </div>
-                <div class="card text-white m-2" style="max-width: 18rem; background-color: #2E2E2F;">
-                    <div class="card-body">
-                        <h5 class="card-title">Goal Two</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the
-                            card's content.</p>
-                    </div>
-                </div>
-                <div class="card text-white m-2" style="max-width: 18rem; background-color: #2E2E2F;">
-                    <div class="card-body">
-                        <h5 class="card-title">Goal Three</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the
-                            card's content.</p>
-                    </div>
-                </div>
-                <div class="card text-white m-2" style="max-width: 18rem; background-color: #2E2E2F;" (click)="navigate()">
+                <div class="card text-white m-2" style="max-width: 18rem; background-color: #2E2E2F;"
+                    (click)="navigate()">
                     <div class="card-body text-center">
                         <span style="font-size: 55px;">+</span>
                         <p class="card-text">ADD GOAL</p>

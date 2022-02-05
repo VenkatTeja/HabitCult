@@ -7,10 +7,23 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  constructor(private router: Router) {}
+  goals = [
+    {
+      goalName: 'Sample 1',
+    },
+    {
+      goalName: 'Sample 2',
+    },
+  ];
 
-  ngOnInit(): void {}
+  constructor(private router: Router) { }
+
+  ngOnInit(): void { }
   navigate() {
     this.router.navigate(['create-goal']);
+  }
+
+  goalPage(i: number) {
+    this.router.navigate([`goal-progress/${i}`]);
   }
 }
