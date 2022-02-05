@@ -43,7 +43,8 @@ const config: HardhatUserConfig = {
       mining: {
         auto: false,
         interval: 2000
-      }
+      },
+      chainId: 200
     }
   },
   gasReporter: {
