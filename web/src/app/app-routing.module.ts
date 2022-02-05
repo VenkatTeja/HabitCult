@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/guards/auth-guard';
 import { CreateGoalComponent } from './create-goal/create-goal.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { EndOfGoalComponent } from './end-of-goal/end-of-goal.component';
 import { GoalProgressComponent } from './goal-progress/goal-progress.component';
 
 const routes: Routes = [
@@ -17,8 +18,12 @@ const routes: Routes = [
     component: CreateGoalComponent,
   },
   {
-    path: 'goal-progress',
+    path: 'goal-progress/:id',
     component: GoalProgressComponent,
+  },
+  {
+    path: 'end-of-goal/:id',
+    component: EndOfGoalComponent,
   },
   { path: '**', redirectTo: '' },
 ];
