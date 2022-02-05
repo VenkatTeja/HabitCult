@@ -6,7 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./upcoming-tasks.component.scss']
 })
 export class UpcomingTasksComponent implements OnInit {
-
+  durationOfGoal = 4;
+  completedWeeks = 2;
+  currentWeek = this.completedWeeks + 1;
   constructor() { }
 
   ngOnInit(): void {
