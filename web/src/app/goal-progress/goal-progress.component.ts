@@ -14,6 +14,7 @@ export class GoalProgressComponent implements OnInit {
   validators: any
   frequency: any
   totalWeeks: any
+  targetStatus = 0
   constructor(private contractService: ContractService, private globalService: GlobalService) { 
     let url = location.href.split('/')
     this.goalId = Number(url[url.length-1])
@@ -28,6 +29,7 @@ export class GoalProgressComponent implements OnInit {
     this.stakingAmount = Number(target.betAmount) / 1000000
     this.frequency = Number(target.eventsPerPeriod)
     this.totalWeeks = Number(target.nPeriods)
+    this.targetStatus = target.targetStatus
   }
 
 }

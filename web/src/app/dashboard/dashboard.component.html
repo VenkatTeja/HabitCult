@@ -24,10 +24,10 @@
                     </div>
                 </div>
                 <div *ngFor="let goal of goals;let i = index" class="card text-white m-2"
-                    style="max-width: 18rem; background-color: #2E2E2F;" (click)="goalPage(i)">
+                    style="max-width: 18rem; background-color: #2E2E2F;" (click)="goalPage(i+1)">
                     <div class="card-body">
                         <h5 class="card-title">{{goal.name}}</h5>
-                        <p class="card-text">{{goal.objectiveInWords}}</p>
+                        <p class="card-text" style="font-size: small;">{{goal.objectiveInWords}}</p>
                         <small>#{{goal.category}}</small>
                     </div>
                 </div>
