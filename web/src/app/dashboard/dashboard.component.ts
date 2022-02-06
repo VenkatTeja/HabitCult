@@ -8,15 +8,8 @@ import { GlobalService } from '../global.service';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  constructor(private router: Router, private globalService: GlobalService) {}
-  goals = [
-    {
-      goalName: 'Sample 1',
-    },
-    {
-      goalName: 'Sample 2',
-    },
-  ];
+  constructor(private router: Router, private globalService: GlobalService) { }
+  goals: any = [];
   ngOnInit(): void {
     this.refreshGoals();
   }
@@ -28,14 +21,25 @@ export class DashboardComponent implements OnInit {
       await this.globalService.CultManagerContract.functions.getGoals(
         await this.globalService.signer.getAddress()
       );
-    console.log({ goalIDs });
+    for (let i = 0; i < goalIDs[0].length; i++) {
+      let goal = await this.globalService.CultManagerContract.functions.getGoalByID(goalIDs[0][i])
+      this.goals.push(goal)
+    }
   }
 
   navigate() {
-    this.router.navigate(['create-goal']);
+    if (this.globalService.isConnected) {
+      this.router.navigate(['create-goal']);
+    } else {
+      this.globalService.connectMetamask()
+    }
   }
 
   goalPage(i: number) {
-    this.router.navigate([`goal-progress/${i}`]);
+    if (this.globalService.isConnected) {
+      this.router.navigate([`goal-progress/${i}`]);
+    } else {
+      this.globalService.connectMetamask()
+    }
   }
 }

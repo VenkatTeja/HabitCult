@@ -37,16 +37,16 @@ export class CreateGoalComponent implements OnInit {
       durationOfGoal: [null, [Validators.required]],
       frequency: [null, [Validators.required]],
       betAmount: [null, [Validators.required]],
-      validatorName1: null,
-      validatorAddress1: null,
-      validatorName2: null,
-      validatorAddress2: null,
-      validatorName3: null,
-      validatorAddress3: null,
-      validatorName4: null,
-      validatorAddress4: null,
-      validatorName5: null,
-      validatorAddress5: null
+      validatorName1: '',
+      validatorAddress1: '',
+      validatorName2: '',
+      validatorAddress2: '',
+      validatorName3: '',
+      validatorAddress3: '',
+      validatorName4: '',
+      validatorAddress4: '',
+      validatorName5: '',
+      validatorAddress5: ''
     });
   }
 
@@ -87,8 +87,6 @@ export class CreateGoalComponent implements OnInit {
         console.log('token approved')
         this.isTokenAllowed = true;
         this.loader.loaderEnd()
-      } else {
-        alert('Form is invalid')
       }
     } catch (err) {
       this.loader.loaderEnd()
@@ -97,49 +95,53 @@ export class CreateGoalComponent implements OnInit {
   }
 
   async createGoal() {
-    this.submitted = true;
-    if (this.createGoalForm.valid) {
-      this.loader.loaderStart()
-      await this.globalService.waitForConnect()
-      console.log({ addr: await this.globalService.signer.getAddress() })
-      let inWei = ethers.utils.parseUnits(this.betAmount.toString(), this.globalService.TokenDecimals).toString()
-      let name = this.createGoalForm.value.goalName;
-      let objectiveInWords = this.createGoalForm.value.goalDescription;
-      let category = this.createGoalForm.value.goalCategory;
-      let participant: User = {
-        addr: this.createGoalForm.value.address || await this.globalService.signer.getAddress(),
-        nick: this.createGoalForm.value.name
+    try {
+      this.submitted = true;
+      if (this.createGoalForm.valid) {
+        this.loader.loaderStart()
+        await this.globalService.waitForConnect()
+        console.log({ addr: await this.globalService.signer.getAddress() })
+        let inWei = ethers.utils.parseUnits(this.betAmount.toString(), this.globalService.TokenDecimals).toString()
+        let name = this.createGoalForm.value.goalName;
+        let objectiveInWords = this.createGoalForm.value.goalDescription;
+        let category = this.createGoalForm.value.goalCategory;
+        let participant: User = {
+          addr: this.createGoalForm.value.address || await this.globalService.signer.getAddress(),
+          nick: this.createGoalForm.value.name
+        }
+        const period = 302400, eventsPerPeriod = 2, nPeriods = 2, targetType = 0, betAmount = inWei;
+  
+        let validators: User[] = [
+          {
+            nick: this.createGoalForm.value.validatorName1,
+            addr: this.createGoalForm.value.validatorAddress1,
+          },
+          {
+            nick: this.createGoalForm.value.validatorName2,
+            addr: this.createGoalForm.value.validatorAddress2,
+          },
+          {
+            nick: this.createGoalForm.value.validatorName3,
+            addr: this.createGoalForm.value.validatorAddress3,
+          },
+          {
+            nick: this.createGoalForm.value.validatorName4,
+            addr: this.createGoalForm.value.validatorAddress4,
+          },
+          {
+            nick: this.createGoalForm.value.validatorName5,
+            addr: this.createGoalForm.value.validatorAddress5,
+          },
+        ]
+        let addGoal = await this.globalService.CultManagerContract.connect(this.globalService.signer).functions.addGoal(name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount)
+        console.log(addGoal)
+        this.loader.loaderEnd()
+      } else {
+        this.loader.loaderEnd()
       }
-      const period = 302400, eventsPerPeriod = 2, nPeriods = 2, targetType = 0, betAmount = inWei;
-
-      let validators: User[] = [
-        {
-          nick: this.createGoalForm.value.validatorName1,
-          addr: this.createGoalForm.value.validatorAddress1,
-        },
-        {
-          nick: this.createGoalForm.value.validatorName2,
-          addr: this.createGoalForm.value.validatorAddress2,
-        },
-        {
-          nick: this.createGoalForm.value.validatorName3,
-          addr: this.createGoalForm.value.validatorAddress3,
-        },
-        {
-          nick: this.createGoalForm.value.validatorName4,
-          addr: this.createGoalForm.value.validatorAddress4,
-        },
-        {
-          nick: this.createGoalForm.value.validatorName5,
-          addr: this.createGoalForm.value.validatorAddress5,
-        },
-      ]
-      let addGoal = await this.globalService.CultManagerContract.connect(this.globalService.signer).functions.addGoal(name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount)
-      console.log(addGoal)
+    } catch (err) {
+      console.error(err)
       this.loader.loaderEnd()
-    } else {
-      this.loader.loaderEnd()
-      alert('Form is invalid')
     }
   }
 

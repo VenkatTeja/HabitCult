@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -15,7 +14,6 @@ import { EndOfGoalComponent } from './end-of-goal/end-of-goal.component';
 import { GlobalService } from './global.service';
 import { UpcomingTasksComponent } from './goal-progress/upcoming-tasks/upcoming-tasks.component';
 import { HistoryComponent } from './goal-progress/history/history.component';
-// import { ContractService } from './services/contract.service';
 import { MetamaskMissingComponent } from './metamask-missing/metamask-missing.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
