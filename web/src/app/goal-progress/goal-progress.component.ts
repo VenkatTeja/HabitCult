@@ -18,7 +18,7 @@ export class GoalProgressComponent implements OnInit {
 
   userStates = {
     0: 'Need to Start',
-    1: 'On Track',
+    1: 'In Progress', // should be running
     2: 'Completed',
     3: 'Failed',
     4: 'Gave Up'

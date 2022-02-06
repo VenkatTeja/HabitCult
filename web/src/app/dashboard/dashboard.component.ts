@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
       for (let i = 0; i < goalIDs[0].length; i++) {
         let goal = await this.globalService.GoalManagerContract.functions.getGoalByID(goalIDs[0][i])
         console.log(goal)
-        this.goals.push(goal)
+        this.goals.push({id: goalIDs[0][i], ...goal})
       }
       console.log('Goals', this.goals)
       this.loader.loaderEnd()

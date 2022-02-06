@@ -96,9 +96,9 @@ describe("GoalNFT", function () {
         await transfer.wait()
     })
 
-    // it("Goal: Participant only - should pass", async function () {
-    //     await checkGoal(addr1, [], 10, 2, 2, 0, [3, 2], [], true, 5000)
-    // })
+    it("Goal: Participant only - should pass", async function () {
+        await checkGoal(addr1, [], 10, 2, 2, 0, [3, 2], [], true, 5000)
+    })
 
     // it("Goal: Participant only - should fail", async function () {
     //     await checkGoal(addr1, [], 5, 2, 2, 0, [3, 0], [], false, 3000)
@@ -157,17 +157,17 @@ describe("GoalNFT", function () {
     //     expect(parseFloat(newContractBal)).to.equal(0.5)
     // })
 
-    it("Goal - success - withdraw", async function () {
-        let goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 1]], true, 3000)
-        let stake = await goalManager.connect(addr1).getUserStake(addr1.address)
-        console.log({stake})
-        expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
-        let withdraw = await goalManager.connect(addr1).userWithdraw('10000000')
-        await withdraw.wait()
-        stake = await goalManager.connect(addr1).getUserStake(addr1.address)
-        console.log({stake})
-        expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('0')
-    })
+    // it("Goal - success - withdraw", async function () {
+    //     let goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 1]], true, 3000)
+    //     let stake = await goalManager.connect(addr1).getUserStake(addr1.address)
+    //     console.log({stake})
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
+    //     let withdraw = await goalManager.connect(addr1).userWithdraw('10000000')
+    //     await withdraw.wait()
+    //     stake = await goalManager.connect(addr1).getUserStake(addr1.address)
+    //     console.log({stake})
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('0')
+    // })
 
     // it("Goal - success - repeat", async function () {
     //     let goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 1]], true, 3000)
@@ -203,9 +203,13 @@ describe("GoalNFT", function () {
         return new Promise(async (resolve, reject) => {
             let currentBlock = await web3.eth.getBlockNumber()
             console.log({currentBlock, c})
+            let periods = await goalManager.getPeriodEndingsByBlock(goalID)
+            let loggedVote = await goalManager.getLoggedEvents(goalID, participant.address, periods[0])
+            console.log({loggedVote})
             if(currentBlock > periodEndingsByBlock[c].toNumber()) {
                 let currentLogPeriod = await goalManager.currentBlockToLog(goalID)
                 console.log({currentLogPeriod})
+                expect(currentLogPeriod.toNumber()).to.equal(currentBlock-1)
                 console.log('logging activity from participant')
                 let logActivity1 = await cultManager.connect(participant).logActivity(goalID, activityLog[c])
 

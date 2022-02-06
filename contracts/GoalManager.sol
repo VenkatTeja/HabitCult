@@ -272,8 +272,10 @@ contract GoalManager is Ownable {
         CultMath.Target storage target = goal.target;
         uint length = target.nPeriods;
         uint256[] memory blocks = new uint256[](length);
+        console.log("start block: %s", target.startBlock);
         for (uint i=0; i<target.nPeriods; i++) {
             uint256 blk = target.startBlock + (i+1) * target.period;
+            console.log("blk:%s,  block: %s, period: %s", i, blk, target.period);
             blocks[i] = blk;
         }
         return blocks;
