@@ -30,9 +30,11 @@ export class ValidationPortalComponent implements OnInit {
         console.log(target)
         let vote = {voted: false, events: 0}
         try {
+          let periods = await this.globalService.GoalManagerContract.functions.getPeriodEndingsByBlock(goalIDs[0][i])
           let currentBlk = await this.globalService.GoalManagerContract.functions.currentBlockToLog(goalIDs[0][i])
-          console.log({currentBlk})
-          let vote = await this.globalService.GoalManagerContract.functions.getLoggedEvents(goalIDs[0][i], goal.participant.addr, currentBlk)
+          console.log({currentBlk, str: currentBlk[0].toString(), periods})
+          let voteArr = await this.globalService.GoalManagerContract.functions.getLoggedEvents(goalIDs[0][i], goal.participant.addr, periods[0][0])
+          vote = voteArr[0]
           console.log({vote})
         } catch(err) {
           this.loader.loaderEnd()
@@ -43,7 +45,7 @@ export class ValidationPortalComponent implements OnInit {
           goalName: goal.name,
           goalFrequency: target.eventsPerPeriod,
           participant: goal.participant.nick,
-          vote
+          vote: vote
         })
       }
     } catch (err) {

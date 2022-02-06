@@ -96,9 +96,9 @@ describe("GoalNFT", function () {
         await transfer.wait()
     })
 
-    it("Goal: Participant only - should pass", async function () {
-        await checkGoal(addr1, [], 10, 2, 2, 0, [3, 2], [], true, 5000)
-    })
+    // it("Goal: Participant only - should pass", async function () {
+    //     await checkGoal(addr1, [], 10, 2, 2, 0, [3, 2], [], true, 5000)
+    // })
 
     // it("Goal: Participant only - should fail", async function () {
     //     await checkGoal(addr1, [], 5, 2, 2, 0, [3, 0], [], false, 3000)
@@ -116,9 +116,9 @@ describe("GoalNFT", function () {
     //     await checkGoal(addr1, [owner], 6, 2, 2, 1, [3, 1], [[3, 2]], false, 5000)
     // })
 
-    // it("Goal: 1 Validator only (max) - should pass", async function () {
-    //     await checkGoal(addr1, [owner], 6, 2, 2, 1, [3, 1], [[2, 2]], true, 4000)
-    // })
+    it("Goal: 1 Validator only (max) - should pass", async function () {
+        await checkGoal(addr1, [owner], 30, 2, 5, 0, [3, 1], [[2, 2]], true, 4000)
+    })
 
     // it("Goal: 2 Validator only (MIN) - should fail", async function () {
     //     await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[3, 0], [2, 1]], false, 3000)
@@ -169,35 +169,35 @@ describe("GoalNFT", function () {
     //     expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('0')
     // })
 
-    it("2 Goals", async function () {
-        let goalID1 = await createGoal(addr1, [owner, addr2], 6, 2, 2, 0) //, [3, 1], [[2, 0], [3, 1]], true, 3000)
-        let stake = await goalManager.connect(addr1).getUserStake(addr1.address)
-        console.log({stake})
-        expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
-        expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('10')
+    // it("2 Goals", async function () {
+    //     let goalID1 = await createGoal(addr1, [owner, addr2], 6, 2, 2, 0) //, [3, 1], [[2, 0], [3, 1]], true, 3000)
+    //     let stake = await goalManager.connect(addr1).getUserStake(addr1.address)
+    //     console.log({stake})
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('10')
         
-        let goalID2 = await createGoal(addr1, [owner, addr2], 6, 2, 2, 0) //, [3, 1], [[2, 0], [3, 1]], true, 3000)
-        stake = await goalManager.connect(addr1).getUserStake(addr1.address)
-        console.log({stake})
-        expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('20')
-        expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('20')
+    //     let goalID2 = await createGoal(addr1, [owner, addr2], 6, 2, 2, 0) //, [3, 1], [[2, 0], [3, 1]], true, 3000)
+    //     stake = await goalManager.connect(addr1).getUserStake(addr1.address)
+    //     console.log({stake})
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('20')
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('20')
 
         
-    })
+    // })
 
-    it("Goal - success - repeat", async function () {
-        let goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 1]], true, 3000)
-        let stake = await goalManager.connect(addr1).getUserStake(addr1.address)
-        console.log({stake})
-        expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
-        expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('0')
+    // it("Goal - success - repeat", async function () {
+    //     let goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 1]], true, 3000)
+    //     let stake = await goalManager.connect(addr1).getUserStake(addr1.address)
+    //     console.log({stake})
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('0')
         
-        goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 1]], true, 3000)
-        stake = await goalManager.connect(addr1).getUserStake(addr1.address)
-        console.log({stake})
-        expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
-        expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('0')
-    })
+    //     goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 1]], true, 3000)
+    //     stake = await goalManager.connect(addr1).getUserStake(addr1.address)
+    //     console.log({stake})
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('0')
+    // })
 
     // it("Goal - fail - drop", async function () {
     //     let goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 0]], false, 2500)
@@ -230,10 +230,10 @@ describe("GoalNFT", function () {
                 let logActivity1 = await cultManager.connect(participant).logActivity(goalID, activityLog[c])
 
                 let valActivities: ContractTransaction[] = [];
-                for(let i=0; i< validatorSigners.length; ++i) {
-                    console.log('logging activity from validator: ' + i)
-                    valActivities.push(await cultManager.connect(validatorSigners[i]).logActivity(goalID, validatorActivityLog[i][c]))
-                }
+                // for(let i=0; i< validatorSigners.length; ++i) {
+                //     console.log('logging activity from validator: ' + i)
+                //     valActivities.push(await cultManager.connect(validatorSigners[i]).logActivity(goalID, validatorActivityLog[i][c]))
+                // }
                 await logActivity1.wait()
                 for(let i=0; i<valActivities.length; ++i) {
                     await valActivities[i].wait()

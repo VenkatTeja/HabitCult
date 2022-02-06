@@ -42,7 +42,7 @@ export class EndOfGoalComponent implements OnInit {
   async withDrawAndExit() {
     try {
       this.loader.loaderStart()
-      await this.contractService.userWithdraw(this.goalId)
+      await this.contractService.userWithdraw(this.goalId) // unlocked funds
       this.router.navigate(['dashboard'])
       this.loader.loaderEnd()
     } catch (err) {
