@@ -97,9 +97,9 @@ describe("GoalNFT", function () {
     //     await checkGoal(addr1, [owner], 6, 2, 2, 0, [3, 1], [[3, 0]], false, 3000)
     // })
 
-    // it("Goal: 1 Validator only (min) - should pass", async function () {
-    //     await checkGoal(addr1, [owner], 6, 2, 2, 0, [3, 1], [[2, 2]], true, 4000)
-    // })
+    it("Goal: 1 Validator only (min) - should pass", async function () {
+        await checkGoal(addr1, [owner], 6, 2, 2, 0, [3, 1], [[2, 2]], true, 4000)
+    })
 
     // it("Goal: 1 Validator only (max) - should fail", async function () {
     //     await checkGoal(addr1, [owner], 6, 2, 2, 1, [3, 1], [[3, 2]], false, 5000)
@@ -172,21 +172,21 @@ describe("GoalNFT", function () {
     //     expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('0')
     // })
 
-    it("Goal - fail - drop", async function () {
-        let goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 0]], false, 2500)
-        let stake = await cultManager.connect(addr1).getUserStake(addr1.address)
-        console.log({stake})
-        expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
-        expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('10')
+    // it("Goal - fail - drop", async function () {
+    //     let goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 0]], false, 2500)
+    //     let stake = await cultManager.connect(addr1).getUserStake(addr1.address)
+    //     console.log({stake})
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('10')
 
-        let giveUp = await cultManager.connect(addr1).giveUpAndCloseGoal(goalID);
-        await giveUp.wait();
+    //     let giveUp = await cultManager.connect(addr1).giveUpAndCloseGoal(goalID);
+    //     await giveUp.wait();
 
-        stake = await cultManager.connect(addr1).getUserStake(addr1.address)
-        console.log({stake})
-        expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('0')
-        expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('0')
-    })
+    //     stake = await cultManager.connect(addr1).getUserStake(addr1.address)
+    //     console.log({stake})
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('0')
+    //     expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('0')
+    // })
 
     function logActivity(goalID: BigNumber, participant: SignerWithAddress, validatorSigners: SignerWithAddress[], periodEndingsByBlock: any[], activityLog: number[], validatorActivityLog: number[][], c: number = 0) {
         return new Promise(async (resolve, reject) => {

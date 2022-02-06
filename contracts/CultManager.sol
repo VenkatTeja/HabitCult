@@ -79,6 +79,10 @@ contract CultManager is Ownable {
         return categoryIndexes;
     }
 
+    // function getCategory(string memory index) public view returns (Category memory) {
+    //     return categories[index];
+    // }
+
     function setMaxLoss(uint64 _maxLoss) public onlyOwner returns (uint64) {
         MAX_LOSS = _maxLoss;
         return MAX_LOSS;
@@ -112,19 +116,19 @@ contract CultManager is Ownable {
         return true;
     }
 
-    function removeCategory(uint categoryIndex) public onlyOwner returns (string[] memory) {
-        require(categoryIndex < categoryIndexes.length, "categoryIndex must be < total number of categories");
-        string memory category = categoryIndexes[categoryIndex];
-        require(categories[category].exists, "Category does not exist.");
-        delete categories[category];
+    // function removeCategory(uint categoryIndex) public onlyOwner returns (string[] memory) {
+    //     require(categoryIndex < categoryIndexes.length, "categoryIndex must be < total number of categories");
+    //     string memory category = categoryIndexes[categoryIndex];
+    //     require(categories[category].exists, "Category does not exist.");
+    //     delete categories[category];
 
-        for (uint i = categoryIndex; i<categoryIndexes.length-1; i++){
-            categoryIndexes[i] = categoryIndexes[i+1];
-        }
-        categoryIndexes.pop();
-        nCategories -= 1;
-        return categoryIndexes;
-    }
+    //     for (uint i = categoryIndex; i<categoryIndexes.length-1; i++){
+    //         categoryIndexes[i] = categoryIndexes[i+1];
+    //     }
+    //     categoryIndexes.pop();
+    //     nCategories -= 1;
+    //     return categoryIndexes;
+    // }
 
     function setNFTAddress(address _nft) public onlyOwner returns (bool) {
         nft = _nft;
@@ -163,7 +167,9 @@ contract CultManager is Ownable {
 
     function getNickByGoalID(uint256 id, address addr) external view returns (string memory) {
         CultMath.Goal storage goal = nftGoalMap[id];
-        address[] memory addrs = new address[](goal.validators.length);
+        if(goal.participant.addr == addr)
+            return goal.participant.nick;
+
         for (uint i=0; i<goal.validators.length; i++) {
             CultMath.User memory user = goal.validators[i];
             if(addr == user.addr) {
@@ -180,16 +186,16 @@ contract CultManager is Ownable {
     function getGoalByID(uint256 id) external view returns (string memory name,
                                                             string memory objectiveInWords,
                                                             string memory category,
-                                                            address participant,
-                                                            address[] memory validators,
+                                                            CultMath.User memory participant,
+                                                            CultMath.User[] memory validators,
                                                             uint256 validatorNFT) {
         CultMath.Goal storage goal = nftGoalMap[id];
-        address[] memory addrs = new address[](goal.validators.length);
-        for (uint i=0; i<goal.validators.length; i++) {
-            CultMath.User memory user = goal.validators[i];
-            addrs[i] = user.addr;
-        }
-        return (goal.name, goal.objectiveInWords, goal.category, goal.participant.addr, addrs, goal.validatorNFT);
+        // address[] memory addrs = new address[](goal.validators.length);
+        // for (uint i=0; i<goal.validators.length; i++) {
+        //     CultMath.User memory user = goal.validators[i];
+        //     addrs[i] = user.addr;
+        // }
+        return (goal.name, goal.objectiveInWords, goal.category, goal.participant, goal.validators, goal.validatorNFT);
     }
 
     function approve(uint256 betAmount) public returns (bool) {
