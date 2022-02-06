@@ -11,7 +11,7 @@ const IERC20 = require('./abis/IERC20.abi.json');
 export class GlobalService {
   // web3 = new Web3('http://localhost:8545');
   provider = new ethers.providers.Web3Provider(window.ethereum);
-  CultManagerAddress = '0x97915c43511f8cB4Fbe7Ea03B96EEe940eC4AF12'; // update this
+  CultManagerAddress = '0x08677Af0A7F54fE2a190bb1F75DE682fe596317e'; // update this
   StakeCoin = '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
   TokenDecimals = 6;
 

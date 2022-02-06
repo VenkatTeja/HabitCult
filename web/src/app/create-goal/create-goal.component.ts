@@ -3,6 +3,7 @@ import { GlobalService } from '../global.service';
 import { BigNumber, ethers, Signer } from "ethers";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingService } from '../loader.service';
+import { Router } from '@angular/router';
 
 export interface User {
   addr: string;
@@ -19,7 +20,7 @@ export class CreateGoalComponent implements OnInit {
   public createGoalForm!: FormGroup;
   submitted = false
 
-  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private loader: LoadingService) { }
+  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private loader: LoadingService, private router: Router) { }
   get form() { return this.createGoalForm.controls; }
 
   ngOnInit(): void {
@@ -129,7 +130,7 @@ export class CreateGoalComponent implements OnInit {
           addr: this.createGoalForm.value.address || await this.globalService.signer.getAddress(),
           nick: this.createGoalForm.value.name
         }
-        const period = 302400, eventsPerPeriod = 2, nPeriods = 2, targetType = 0, betAmount = inWei;
+        const period = 10, eventsPerPeriod = 2, nPeriods = 2, targetType = 0, betAmount = inWei;
   
         let validators: User[] = []
         validators = this.parseValidator(validators, 1)
@@ -140,8 +141,9 @@ export class CreateGoalComponent implements OnInit {
         console.log('add goal', {name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount})
         let addGoal = await this.globalService.CultManagerContract.connect(this.globalService.signer).functions.addGoal(name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount)
         console.log(addGoal)
-        addGoal.wait(2)
+        await addGoal.wait(2)
         this.loader.loaderEnd()
+        this.router.navigate(['dashboard'])
       } else {
         this.loader.loaderEnd()
       }

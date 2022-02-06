@@ -31,13 +31,17 @@
                 <div class="row">
                     <div class="col">
                         <span style="font-size: small;">Current Funds</span>
-                        <h4>$1206.33</h4>
+                        <h4>${{stakingAmount}}</h4>
                     </div>
                     <div class="col">
                         <span style="font-size: small;">Status</span>
-                        <div style="display: flex;">
+                        <div style="display: flex;" *ngIf="targetStatus">
                             <h4>On Track</h4>
                             <mat-icon style="color: orange;">local_fire_department</mat-icon>
+                        </div>
+                        <div style="display: flex;" *ngIf="!targetStatus">
+                            <h4>You can catch up!</h4>
+                            <mat-icon style="color: red;">trending_down</mat-icon>
                         </div>
                     </div>
                 </div>
