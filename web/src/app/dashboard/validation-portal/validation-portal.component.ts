@@ -19,13 +19,27 @@ export class ValidationPortalComponent implements OnInit {
 
   async refresh() {
     let goalIDs = await this.contractService.getGoalsToValidate()
+    console.log('validations', goalIDs)
     for (let i = 0; i < goalIDs[0].length; i++) {
       let goal = await this.globalService.CultManagerContract.functions.getGoalByID(goalIDs[0][i])
       console.log(goal)
+      let target = await this.globalService.CultManagerContract.functions.getGoalTargetByID(goalIDs[0][i])
+      console.log(target)
+      let vote = {voted: false, events: 0}
+      try {
+        let currentBlk = await this.globalService.CultManagerContract.functions.currentBlockToLog(goalIDs[0][i])
+        console.log({currentBlk})
+        let vote = await this.globalService.CultManagerABI.functions.getLoggedEvents(goalIDs[0][i], goal.participant.addr, currentBlk)
+        console.log({vote})
+      } catch(err) {
+        console.log(err)
+      }
+
       this.usersToValidate.push({
         goalName: goal.name,
+        goalFrequency: target.eventsPerPeriod,
         participant: goal.participant.nick,
-        goalFrequency: 5
+        vote
       })
     }
   }

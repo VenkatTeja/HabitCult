@@ -140,7 +140,7 @@ export class CreateGoalComponent implements OnInit {
         console.log('add goal', {name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount})
         let addGoal = await this.globalService.CultManagerContract.connect(this.globalService.signer).functions.addGoal(name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount)
         console.log(addGoal)
-        addGoal.wait()
+        addGoal.wait(2)
         this.loader.loaderEnd()
       } else {
         this.loader.loaderEnd()

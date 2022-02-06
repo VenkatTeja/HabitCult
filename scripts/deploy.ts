@@ -58,6 +58,9 @@ async function main() {
   let addCategory2Tx = await cultManager.addCategory('book-reading', 'Book Reading', 'How many hours you read in a week?', 'hi', 'hi');
   await addCategory2Tx.wait();
 
+  addCategory2Tx = await cultManager.addCategory('read-crypto', 'Read About Crypto', 'How many hours you read in a week?', 'hi', 'hi');
+  await addCategory2Tx.wait();
+
   // set NFT address
   let setNFT = await cultManager.setNFTAddress(goalNFT.address);
   await setNFT.wait();
@@ -67,15 +70,15 @@ async function main() {
   console.log('Token approved')
 
   // Add goal
-  let period = 10 // meaning 10 blocks, thats about 20s. Can change this for your testing
+  let period = 302400 // meaning 10 blocks, thats about 20s. Can change this for your testing
   let targetType = 0 // MIN gola
-  let addGoal = await cultManager.connect(user).addGoal('name', 'objectiveInWords', 'book-reading', 
+  let addGoal = await cultManager.connect(user).addGoal('Read About Ethereum', 'Spend at least 3 hours a week learning about ethereum', 'read-crypto', 
     {addr: user.address, nick: 'nick'}, [], period, 2, 2, targetType, '10000000')
   await addGoal.wait()
   console.log('goal 1 added')
 
   // add goal as validator
-  addGoal = await cultManager.connect(user).addGoal('name', 'objectiveInWords', 'book-reading', 
+  addGoal = await cultManager.connect(user).addGoal('Read About Ethereum', 'Spend at least 3 hours a week learning about ethereum', 'read-crypto', 
     {addr: owner.address, nick: 'nick'}, [{addr: user.address, nick: 'nick'}], period, 2, 2, targetType, '1000000')
   await addGoal.wait()
   console.log('goal 2 added')
