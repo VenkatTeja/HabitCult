@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GlobalService } from '../global.service';
+import { ContractService } from '../services/contract.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,7 +9,7 @@ import { GlobalService } from '../global.service';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  constructor(private router: Router, private globalService: GlobalService) { }
+  constructor(private router: Router, private globalService: GlobalService, private contractService: ContractService) { }
   goals: any = [];
   money = {
     total: 1000,
@@ -31,6 +32,7 @@ export class DashboardComponent implements OnInit {
       console.log(goal)
       this.goals.push(goal)
     }
+    console.log('Goals', this.goals)
   }
 
   navigate() {
@@ -41,7 +43,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  goalPage(i: number) {
+  goalPage(i: string | number) {
     if (this.globalService.isConnected) {
       this.router.navigate([`goal-progress/${i}`]);
     } else {
