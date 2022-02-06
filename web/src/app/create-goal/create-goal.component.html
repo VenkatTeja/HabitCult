@@ -149,8 +149,8 @@
                 *ngIf="!isTokenAllowed">Approve USDT</button>
         </div>
         <h6 class="text-white" style="opacity: 0.5; font-weight: bold;">HOW IT WORKS</h6>
-        <div class="col"
-            style="padding: 20px;background-color: #242424; border-radius: 5px; height: 80%; color: #FFFFFF; overflow: auto;">
+        <div class="col" (click)="redirectToWebflow()"
+            style="padding: 20px;background-color: #242424; border-radius: 5px; height: 80%; color: #FFFFFF; overflow: auto; cursor: pointer;">
             <img src="../../assets/images/image 20.svg" style="width: -webkit-fill-available;" />
         </div>
     </div>

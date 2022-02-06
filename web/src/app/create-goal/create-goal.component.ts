@@ -34,6 +34,10 @@ export class CreateGoalComponent implements OnInit {
     this.categories = await this.contractService.getCategories()
   }
 
+  redirectToWebflow() {
+    window.location.href = 'https://habitcult.webflow.io/'
+  }
+
   async reset() {
     this.createGoalForm = this.formBuilder.group({
       name: [null, [Validators.required]],
@@ -99,7 +103,7 @@ export class CreateGoalComponent implements OnInit {
         this.loader.loaderStart()
         await this.globalService.waitForConnect()
         let inWei = ethers.utils.parseUnits(this.betAmount.toString(), this.globalService.TokenDecimals).toString()
-        let approve = await this.globalService.TokenContract.connect(this.globalService.signer).functions.approve(this.globalService.CultManagerAddress, inWei)
+        let approve = await this.globalService.TokenContract.connect(this.globalService.signer).functions.approve(this.globalService.GoalManagerAddress, inWei)
         console.log(approve)
         await approve.wait(2)
         console.log('token approved')
