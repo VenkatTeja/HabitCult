@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ContractService } from 'src/app/services/contract.service';
 
 @Component({
   selector: 'app-validation-portal',
@@ -13,9 +14,10 @@ export class ValidationPortalComponent implements OnInit {
     //   goalFrequency: 5,
     // },
   ];
-  constructor() { }
+  constructor(private contractService: ContractService) { }
 
   ngOnInit(): void {
+
   }
 
 }

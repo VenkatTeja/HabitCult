@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GlobalService } from '../global.service';
+import { ContractService } from '../services/contract.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,23 +9,24 @@ import { GlobalService } from '../global.service';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  constructor(private router: Router, private globalService: GlobalService) { }
+  constructor(private router: Router, private globalService: GlobalService, private contractService: ContractService) { }
   goals: any = [];
   ngOnInit(): void {
     this.refreshGoals();
   }
 
   async refreshGoals() {
-    await this.globalService.waitForConnect();
-    console.log(await this.globalService.signer.getAddress());
-    const goalIDs =
-      await this.globalService.CultManagerContract.functions.getGoals(
-        await this.globalService.signer.getAddress()
-      );
-    for (let i = 0; i < goalIDs[0].length; i++) {
-      let goal = await this.globalService.CultManagerContract.functions.getGoalByID(goalIDs[0][i])
-      this.goals.push(goal)
+    let goalIds = await this.contractService.getParticipantGoals();
+    for (let i = 0; i < goalIds[0].length; i++) {
+      let {goal} = await this.contractService.getGoalDetails(goalIds[0][i])
+      console.log(goal)
+      const goalObj = new Object({
+        goalName: goal.name,
+        goalId: Number(goalIds[0][i])
+      })
+      this.goals.push(goalObj)
     }
+    console.log('Goals', this.goals)
   }
 
   navigate() {
@@ -35,7 +37,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  goalPage(i: number) {
+  goalPage(i: string) {
     if (this.globalService.isConnected) {
       this.router.navigate([`goal-progress/${i}`]);
     } else {

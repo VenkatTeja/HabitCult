@@ -1,28 +1,40 @@
 // import Web3 from 'web3';
+import { Injectable } from '@angular/core';
 import { ethers, Signer } from 'ethers';
 const cultManagerJs = require('../../../artifacts/contracts/CultManager.sol/CultManager.json');
 import { CultManager } from '../../../typechain/CultManager';
 const IERC20 = require('./abis/IERC20.abi.json');
 
+@Injectable({
+  providedIn: 'root'
+})
 export class GlobalService {
-    // web3 = new Web3('http://localhost:8545');
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    CultManagerAddress = "0x5aA185fbEFc205072FaecC6B9D564383e761f8C2"
-    StakeCoin = "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"
-    
-    signer = this.provider.getSigner();
-    CultManagerABI: any = cultManagerJs.abi;
+  // web3 = new Web3('http://localhost:8545');
+  provider = new ethers.providers.Web3Provider(window.ethereum);
+  CultManagerAddress = '0x449C286Ab90639fd9F6604F4f15Ec86bce2b8A61'; // update this
+  StakeCoin = '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
+  TokenDecimals = 6;
 
-    TokenDecimals = 6;
-    TokenContract = new ethers.Contract(this.StakeCoin, IERC20.abi, this.provider);
-    CultManagerContract = new ethers.Contract(this.CultManagerAddress, cultManagerJs.abi, this.provider);
-    public accounts: string[] = []
-    isConnected = false;
-    constructor() {
-        console.log('token abi', IERC20.abi)
-        console.log('cult abi', cultManagerJs.abi)
-        this.connectMetamask()
-    }
+  signer = this.provider.getSigner();
+  CultManagerABI: any = cultManagerJs.abi;
+
+  TokenContract = new ethers.Contract(
+    this.StakeCoin,
+    IERC20.abi,
+    this.provider
+  );
+
+  CultManagerContract = new ethers.Contract(
+    this.CultManagerAddress,
+    cultManagerJs.abi,
+    this.provider
+  );
+
+  public accounts: string[] = [];
+  isConnected = false;
+  constructor() {
+    this.connectMetamask();
+  }
 
     async call(transaction: any) {
         return await transaction.call({});

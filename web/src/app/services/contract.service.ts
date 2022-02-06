@@ -32,7 +32,8 @@ export class ContractService {
         await this.globalService.waitForConnect()
         console.log(await this.globalService.signer.getAddress())
         let goalIDs = await this.globalService.CultManagerContract.functions.getGoals(await this.globalService.signer.getAddress());
-        console.log({goalIDs})
+        console.log({ goalIDs })
+        return goalIDs;
     }
 
     async getGoalsToValidate() {
@@ -44,6 +45,7 @@ export class ContractService {
         let goal = await this.globalService.CultManagerContract.functions.getGoalByID(id);
         let target = await this.globalService.CultManagerContract.functions.getGoalTargetByID(id);
         let result = await this.globalService.CultManagerContract.functions.getGoalResult(id);
+        return { goal, target, result }
     }
 
     async getPeriodsToLog(id: number) {
@@ -69,7 +71,7 @@ export class ContractService {
     async getCategories() {
         let categoryIndexes = await this.globalService.CultManagerContract.functions.getCategoryIndexes();
         let categories: any[] = []
-        for(let i=0; i<categoryIndexes.length; ++i) {
+        for (let i = 0; i < categoryIndexes.length; ++i) {
             let cat = await this.globalService.CultManagerContract.functions.getCategory(categoryIndexes[i])
             categories.push(cat)
         }

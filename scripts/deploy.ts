@@ -44,7 +44,7 @@ async function main() {
   
   // FILL user wallet with USDT
   let balBefore = myLib.getEtherNumber(web3, await myLib.getTokenBalance(web3, token.addr, user.address), token.decimals)
-  await myLib.swapEthForTokens(web3, 10, token.addr, user, user.address)
+  await myLib.swapEthForTokens(web3, 100, token.addr, user, user.address)
   let newBal = myLib.getEtherNumber(web3, await myLib.getTokenBalance(web3, token.addr, user.address), token.decimals)
   if(parseFloat(newBal) > 10) {
     console.log(`USDT token address: ${token.addr}`)
@@ -61,6 +61,24 @@ async function main() {
   // set NFT address
   let setNFT = await cultManager.setNFTAddress(goalNFT.address);
   await setNFT.wait();
+
+  // approve token
+  await myLib.approveToken(web3, token.addr, cultManager.address, '20000000', user)
+  console.log('Token approved')
+
+  // Add goal
+  let period = 10 // meaning 10 blocks, thats about 20s. Can change this for your testing
+  let targetType = 0 // MIN gola
+  let addGoal = await cultManager.connect(user).addGoal('name', 'objectiveInWords', 'book-reading', 
+    {addr: user.address, nick: 'nick'}, [], period, 2, 2, targetType, '10000000')
+  await addGoal.wait()
+  console.log('goal 1 added')
+
+  // add goal as validator
+  addGoal = await cultManager.connect(user).addGoal('name', 'objectiveInWords', 'book-reading', 
+    {addr: owner.address, nick: 'nick'}, [{addr: user.address, nick: 'nick'}], period, 2, 2, targetType, '1000000')
+  await addGoal.wait()
+  console.log('goal 2 added')
 }
 
 // We recommend this pattern to be able to use async/await everywhere

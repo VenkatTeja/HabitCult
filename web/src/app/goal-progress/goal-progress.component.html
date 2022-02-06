@@ -46,7 +46,7 @@
                 <div class="row row-cols-2">
                     <div class="col">
                         <span style="font-size: small;">Goal</span>
-                        <h4>Get Fit</h4>
+                        <h4>{{goalName}}</h4>
                     </div>
                     <div class="col">
                         <span style="font-size: small;">Min Frequency</span>
@@ -54,11 +54,11 @@
                     </div>
                     <div class="col">
                         <span style="font-size: small;">Staking amount</span>
-                        <h4>$1000.00</h4>
+                        <h4>${{stakingAmount}}</h4>
                     </div>
                     <div class="col">
                         <span style="font-size: small;">Validators</span>
-                        <h4>5</h4>
+                        <h4>{{validators && validators.length}}</h4>
                     </div>
                 </div>
             </div>
