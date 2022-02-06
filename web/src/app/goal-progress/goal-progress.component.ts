@@ -8,11 +8,12 @@ import { ethers } from "ethers";
   styleUrls: ['./goal-progress.component.scss']
 })
 export class GoalProgressComponent implements OnInit {
-  stakingAmount = ''
+  stakingAmount = 0
   goalId
   goalName: any
   validators: any
   frequency: any
+  totalWeeks: any
   constructor(private contractService: ContractService, private globalService: GlobalService) { 
     let url = location.href.split('/')
     this.goalId = Number(url[url.length-1])
@@ -24,6 +25,9 @@ export class GoalProgressComponent implements OnInit {
     console.log(goal, target, result)
     this.goalName = goal.name;
     this.validators = goal.validators
+    this.stakingAmount = Number(target.betAmount) / 1000000
+    this.frequency = Number(target.eventsPerPeriod)
+    this.totalWeeks = Number(target.nPeriods)
   }
 
 }
