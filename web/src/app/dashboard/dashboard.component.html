@@ -4,11 +4,13 @@
             <div class="card text-white m-2" style="width: 100%; background-color: #2E2E2F; cursor: pointer;">
                 <div style="width: 100%; padding-top: 15px;">
                     <div style="width: 50%; text-align: center;float: left;">
-                        <p style="font-size: 20px;">{{money.total.toLocaleString(undefined, {minimumFractionDigits: 2})}} USDT</p>
+                        <p style="font-size: 20px;">{{money.total.toLocaleString(undefined, {minimumFractionDigits:
+                            2})}} USDT</p>
                         <p>Total</p>
                     </div>
                     <div style="width: 50%; text-align: center;float: left;">
-                        <p style="font-size: 20px;">{{money.locked.toLocaleString(undefined, {minimumFractionDigits: 2})}} USDT</p>
+                        <p style="font-size: 20px;">{{money.locked.toLocaleString(undefined, {minimumFractionDigits:
+                            2})}} USDT</p>
                         <p>Locked</p>
                     </div>
                 </div>
@@ -25,7 +27,7 @@
                 </div>
                 <div *ngFor="let goal of goals;let i = index" class="card text-white m-2"
                     style="max-width: 18rem; background-color: #2E2E2F;" (click)="goalPage(i+1)">
-                    <div class="card-body">
+                    <div class="card-body" [ngStyle]="{'color': getColors(i)}">
                         <h5 class="card-title">{{goal.name}}</h5>
                         <p class="card-text" style="font-size: small;">{{goal.objectiveInWords}}</p>
                         <small>#{{goal.category}}</small>

@@ -15,6 +15,14 @@ export class GoalProgressComponent implements OnInit {
   frequency: any
   totalWeeks: any
   targetStatus = 0
+
+  userStates = {
+    0: 'Need to Start',
+    1: 'On Track',
+    2: 'Completed',
+    3: 'Failed',
+    4: 'Gave Up'
+  }
   constructor(private contractService: ContractService, private globalService: GlobalService) { 
     let url = location.href.split('/')
     this.goalId = Number(url[url.length-1])
@@ -30,6 +38,10 @@ export class GoalProgressComponent implements OnInit {
     this.frequency = Number(target.eventsPerPeriod)
     this.totalWeeks = Number(target.nPeriods)
     this.targetStatus = target.targetStatus
+  }
+
+  async endGoal() {
+    const res = await this.contractService.giveUpAndCloseGoal(this.goalId)
   }
 
 }

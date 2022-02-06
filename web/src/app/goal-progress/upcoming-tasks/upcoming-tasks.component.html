@@ -1,4 +1,4 @@
-<div class="col-12"
+<div class="col-12" *ngIf="upcomingTasks.length"
     style="height: 80px; padding: 30px; background-color: #191919; border:2px solid #00E793; border-radius: 10px; display: flex; align-items: center;">
     <mat-icon style="color: #00E793; font-size: 15px; align-self: baseline;">circle</mat-icon>
     <h4 style="margin-bottom: 0px; margin-right: 20px;">Week {{totalPeriods - upcomingTasks.length + 1}}</h4>
