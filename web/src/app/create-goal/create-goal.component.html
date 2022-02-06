@@ -1,6 +1,6 @@
 <div [formGroup]="createGoalForm" class="container-fluid row" style="margin-top: 30px;">
     <div class="col" style="max-width: 25%;">
-        <div class="col" style="background-color: #242424; padding: 20px;border-radius: 5px;">
+        <div class="col" style="background-color: rgba(0, 0, 0, 0.6); padding: 20px;border-radius: 5px;">
             <h5 style="color: white">Personal Details</h5>
             <div style="margin-bottom: 15px">
                 <input [ngClass]="{ 'invalid-input': submitted && form.name.errors }" class="form-control" type="text"
@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="col"
-            style="background-color: #242424; padding: 20px;border-radius: 5px; margin-top: 10px;margin-bottom: 10px;">
+            style="background-color: rgba(0, 0, 0, 0.6); padding: 20px;border-radius: 5px; margin-top: 10px;margin-bottom: 10px;">
             <h5 style="color: white">Goal Setting</h5>
             <div>
                 <select class="form-select" [ngClass]="{ 'invalid-input': submitted && form.goalCategory.errors }"
@@ -48,7 +48,7 @@
                 placeholder="Goal Description"></textarea>
             <div class="input-group">
                 <span class="input-group-text"
-                    style="background-color: #242424;color: #FFFFFF; border-color: #242424; padding-left: 2px;"
+                    style="background-color: rgba(0, 0, 0, 0.6);color: #FFFFFF; border-color: rgba(0, 0, 0, 0.6); padding-left: 2px;"
                     id="inputGroup-sizing-default">Duration of goal (in weeks)</span>
                 <input type="number" [ngClass]="{ 'invalid-input': submitted && form.durationOfGoal.errors }"
                     formControlName="durationOfGoal" class="form-control" aria-label="Sizing example input"
@@ -69,7 +69,7 @@
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="inputGroup-sizing-default"
-                    style="background-color: #242424;color: #FFFFFF; border-color: #242424; padding-left: 2px;">Frequency
+                    style="background-color: rgba(0, 0, 0, 0.6);color: #FFFFFF; border-color: rgba(0, 0, 0, 0.6); padding-left: 2px;">Frequency
                     of event</span>
                 <input type="number" [ngClass]="{ 'invalid-input': submitted && form.frequency.errors }"
                     class="form-control" aria-label="Sizing example input" formControlName="frequency"
@@ -81,10 +81,10 @@
             </div>
         </div>
         <div class="col"
-            style="background-color: #242424; padding: 20px;border-radius: 5px; margin-top: 10px;margin-bottom: 10px;">
+            style="background-color: rgba(0, 0, 0, 0.6); padding: 20px;border-radius: 5px; margin-top: 10px;margin-bottom: 10px;">
             <div class="input-group">
                 <span class="input-group-text" id="inputGroup-sizing-default"
-                    style="background-color: #242424;color: #FFFFFF; border-color: #242424; padding-left: 2px;">Staking
+                    style="background-color: rgba(0, 0, 0, 0.6);color: #FFFFFF; border-color: rgba(0, 0, 0, 0.6); padding-left: 2px;">Staking
                     Amount</span>
                 <input [(ngModel)]="betAmount" type="number" min="1" max="1000" (change)="checkTokenAllowance()" class="form-control" aria-label="Sizing example input"
                     formControlName="betAmount" [ngClass]="{ 'invalid-input': submitted && form.betAmount.errors }"
@@ -97,7 +97,7 @@
         </div>
     </div>
     <div class="col" style="margin-bottom: 10px;max-width: 30%;">
-        <div class="col" style="background-color: #242424; padding: 20px;border-radius: 5px; height: 100%;">
+        <div class="col" style="background-color: rgba(0, 0, 0, 0.6); padding: 20px;border-radius: 5px; height: 60%;">
             <h5 style="color: white">Validator Details</h5>
             <div class="mb-3">
                 <input class="form-control" type="text" formControlName="validatorName1"
@@ -150,8 +150,8 @@
         </div>
         <h6 class="text-white" style="opacity: 0.5; font-weight: bold;">HOW IT WORKS</h6>
         <div class="col" (click)="redirectToWebflow()"
-            style="padding: 20px;background-color: #242424; border-radius: 5px; height: 80%; color: #FFFFFF; overflow: auto; cursor: pointer;">
-            <img src="../../assets/images/image 20.svg" style="width: -webkit-fill-available;" />
+            style="padding: 20px;background-color: rgba(0, 0, 0, 0.6); border-radius: 5px; height: 60%; color: #FFFFFF; overflow: auto; cursor: pointer;">
+            <img src="../../assets/images/Frame 102.png" style="width: -webkit-fill-available;" />
         </div>
     </div>
 </div>
