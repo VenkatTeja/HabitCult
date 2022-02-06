@@ -124,6 +124,7 @@ contract GoalManager is Ownable {
     function getGoalByID(uint256 id) external view returns (string memory name,
                                                             string memory objectiveInWords,
                                                             string memory category,
+                                                            uint256 nft,
                                                             CultMath.User memory participant,
                                                             CultMath.User[] memory validators,
                                                             uint256 validatorNFT) {
@@ -133,7 +134,7 @@ contract GoalManager is Ownable {
         //     CultMath.User memory user = goal.validators[i];
         //     addrs[i] = user.addr;
         // }
-        return (goal.name, goal.objectiveInWords, goal.category, goal.participant, goal.validators, goal.validatorNFT);
+        return (goal.name, goal.objectiveInWords, goal.category, goal.nft, goal.participant, goal.validators, goal.validatorNFT);
     }
 
     function approve(uint256 betAmount) public returns (bool) {
@@ -145,7 +146,7 @@ contract GoalManager is Ownable {
 
     function getExtraAmountNeeded(uint256 betAmount, address user) internal returns (int256) {
         console.log("Liability: total: %s, locked: %s, betAmount: %s", liabilitiesByUser[user].total, liabilitiesByUser[user].locked, betAmount);
-        int256 extraAmountNeeded = SafeCast.toInt256(betAmount) - SafeCast.toInt256(liabilitiesByUser[user].total) - SafeCast.toInt256(liabilitiesByUser[user].locked);
+        int256 extraAmountNeeded = SafeCast.toInt256(betAmount) - (SafeCast.toInt256(liabilitiesByUser[user].total) - SafeCast.toInt256(liabilitiesByUser[user].locked));
         return extraAmountNeeded;
     }
 
@@ -217,16 +218,17 @@ contract GoalManager is Ownable {
         return id;
     }
 
-    function updateUserLiability(address creator, uint256 betAmount) internal returns (bool) {
+    function updateUserLiability(address creator, uint256 betAmount) private returns (bool) {
         UserLiability storage liability = liabilitiesByUser[creator];
         int256 extraAmountNeeded = getExtraAmountNeeded(betAmount, creator);
-        // console.log("extra amoount: %s", extraAmountNeeded);f
+        console.log("extra amoount: %s", SafeCast.toUint256(extraAmountNeeded));
         if(extraAmountNeeded > 0) {
             liability.total += SafeCast.toUint256(extraAmountNeeded);
         }
         liability.locked += betAmount;
 
         console.log("locked amount: %s", liability.locked);
+        console.log("total amount: %s", liability.total);
         return true;
     }
 

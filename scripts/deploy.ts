@@ -70,7 +70,7 @@ async function main() {
   addCategory2Tx = await cultManager.addCategory('read-ethereum', 'Learn Ethereum', 'How many hours you read in a week?', 'hi', 'hi');
   await addCategory2Tx.wait();
 
-  addCategory2Tx = await cultManager.addCategory('fitness', 'Improve Fitness', 'How many hours you workout in a week?', 'hi', 'hi');
+  addCategory2Tx = await cultManager.addCategory('fitness', 'Improve Fitness', 'How many hours you workout in a week?', 'https://gateway.pinata.cloud/ipfs/QmaCYhSwEov6QLgAHYnviBj78MKQU6rTH59pz4piLSMsVk', 'hi');
   await addCategory2Tx.wait();
 
   addCategory2Tx = await cultManager.addCategory('read-crypto', 'Smoking', 'How many cigarettes you smoke in a week?', 'hi', 'hi');
@@ -91,6 +91,10 @@ async function main() {
     {addr: user.address, nick: 'nick'}, [], period, 2, 2, targetType, '10000000')
   await addGoal.wait()
   console.log('goal 1 added')
+
+  addGoal = await cultManager.connect(user).addGoal('Get Fit', 'Workout at least 3 hours a week', 'fitness', 
+    {addr: user.address, nick: 'nick'}, [{addr: owner.address, nick: 'nick'}], period, 2, 2, targetType, '1000000')
+  await addGoal.wait()
 
   // add goal as validator
   addGoal = await cultManager.connect(user).addGoal('Get Fit', 'Workout at least 3 hours a week', 'fitness', 

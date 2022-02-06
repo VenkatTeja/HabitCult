@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ethers } from 'ethers';
 import { GlobalService } from '../global.service';
 import { LoadingService } from '../loader.service';
 import { ContractService } from '../services/contract.service';
@@ -13,12 +14,24 @@ export class DashboardComponent implements OnInit {
   constructor(private router: Router, private globalService: GlobalService, private contractService: ContractService, private loader: LoadingService) { }
   goals: any = [];
   money = {
-    total: 1000,
-    locked: 1000,
+    total: 0,
+    locked: 0,
     rewards: 5
   }
   ngOnInit(): void {
     this.refreshGoals();
+    this.getUserStake()
+  }
+
+  async getUserStake() {
+    let data = (await this.contractService.getUserStake())[0]
+    console.log('user stake', data, data.total, Number(data.total))
+    this.money = {
+      total: Number(ethers.utils.formatUnits(data.total, this.globalService.TokenDecimals)),
+      locked: Number(ethers.utils.formatUnits(data.locked, this.globalService.TokenDecimals)),
+      rewards: 0
+    }
+    console.log({money: this.money})
   }
 
   getColors(i: number) {

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { ethers, Signer } from 'ethers';
 const cultManagerJs = require('../../../artifacts/contracts/CultManager.sol/CultManager.json');
 const goalManagerJS = require('../../../artifacts/contracts/GoalManager.sol/GoalManager.json');
+const goalNFTJS = require('../../../artifacts/contracts/GoalNFT.sol/GoalNFT.json');
 import { CultManager } from '../../../typechain/CultManager';
 const IERC20 = require('./abis/IERC20.abi.json');
 
@@ -12,8 +13,10 @@ const IERC20 = require('./abis/IERC20.abi.json');
 export class GlobalService {
   // web3 = new Web3('http://localhost:8545');
   provider = new ethers.providers.Web3Provider(window.ethereum);
-  CultManagerAddress = '0x618aB3160c5bbBc5bFa034ACa8e37dF3Eea0316D'; // update this
-  GoalManagerAddress = '0x7c4D072293651Df0BF274A454F4C3EC70fc5A866';
+  CultManagerAddress = '0xbaee9B65349929Bd78f9878555bF78027Df7f101'; // update this
+  GoalManagerAddress = '0x701dC26AcaD119E892695bb6A06956e2165C2052';
+  NFTAddress = "0x2D6E6A6430F0121d6949D743DF54730b40C5c74F"
+
   StakeCoin = '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
   TokenDecimals = 6;
 
@@ -32,6 +35,12 @@ export class GlobalService {
     cultManagerJs.abi,
     this.provider
   );
+
+  NFTContract = new ethers.Contract(
+      this.NFTAddress,
+      goalNFTJS.abi,
+      this.provider
+  )
 
   GoalManagerContract = new ethers.Contract(
       this.GoalManagerAddress,

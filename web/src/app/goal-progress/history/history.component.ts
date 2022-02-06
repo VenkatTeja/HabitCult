@@ -61,7 +61,7 @@ export class HistoryComponent implements OnInit {
   
   async getValidatorStatus(id: number, addr: string, currentBlk: number) {
     console.log({id, addr, currentBlk})
-    let vote = await this.globalService.CultManagerABI.functions.getLoggedEvents(id, addr, BigInt(currentBlk))
+    let vote = await this.globalService.GoalManagerContract.functions.getLoggedEvents(id, addr, BigInt(currentBlk))
     console.log(vote);    
     return vote.status
   }

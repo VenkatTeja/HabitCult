@@ -57,7 +57,7 @@ describe("GoalNFT", function () {
         cultManager = await CultManagerx.deploy(goalManager.address);
         await cultManager.deployed();
 
-        let addCategory2Tx = await cultManager.addCategory('book-reading', 'Book Reading', 'How many hours you read in a week?', 'hi', 'hi');
+        let addCategory2Tx = await cultManager.addCategory('book-reading', 'Book Reading', 'How many hours you read in a week?', 'https://gateway.pinata.cloud/ipfs/QmaCYhSwEov6QLgAHYnviBj78MKQU6rTH59pz4piLSMsVk', 'hi');
         await addCategory2Tx.wait();
 
         let setNFT = await cultManager.setNFTAddress(goalNFT.address);
@@ -169,19 +169,35 @@ describe("GoalNFT", function () {
     //     expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('0')
     // })
 
-    // it("Goal - success - repeat", async function () {
-    //     let goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 1]], true, 3000)
-    //     let stake = await goalManager.connect(addr1).getUserStake(addr1.address)
-    //     console.log({stake})
-    //     expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
-    //     expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('0')
+    it("2 Goals", async function () {
+        let goalID1 = await createGoal(addr1, [owner, addr2], 6, 2, 2, 0) //, [3, 1], [[2, 0], [3, 1]], true, 3000)
+        let stake = await goalManager.connect(addr1).getUserStake(addr1.address)
+        console.log({stake})
+        expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
+        expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('10')
         
-    //     goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 1]], true, 3000)
-    //     stake = await goalManager.connect(addr1).getUserStake(addr1.address)
-    //     console.log({stake})
-    //     expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
-    //     expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('0')
-    // })
+        let goalID2 = await createGoal(addr1, [owner, addr2], 6, 2, 2, 0) //, [3, 1], [[2, 0], [3, 1]], true, 3000)
+        stake = await goalManager.connect(addr1).getUserStake(addr1.address)
+        console.log({stake})
+        expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('20')
+        expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('20')
+
+        
+    })
+
+    it("Goal - success - repeat", async function () {
+        let goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 1]], true, 3000)
+        let stake = await goalManager.connect(addr1).getUserStake(addr1.address)
+        console.log({stake})
+        expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
+        expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('0')
+        
+        goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 1]], true, 3000)
+        stake = await goalManager.connect(addr1).getUserStake(addr1.address)
+        console.log({stake})
+        expect(myLib.getEtherNumber(web3, new BN(stake.total.toString()), token.decimals)).to.equal('10')
+        expect(myLib.getEtherNumber(web3, new BN(stake.locked.toString()), token.decimals)).to.equal('0')
+    })
 
     // it("Goal - fail - drop", async function () {
     //     let goalID = await checkGoal(addr1, [owner, addr2], 6, 2, 2, 0, [3, 1], [[2, 0], [3, 0]], false, 2500)
@@ -323,6 +339,13 @@ describe("GoalNFT", function () {
         console.log({result})
         expect(result.isPass).to.equal(isPass);
         expect(result.eventsRegisteredAvg1000x.toNumber()).to.equal(expectedAvgLog)
+        if(isPass) {
+            let goal = await goalManager.getGoalByID(goalID)
+            let tokenInfo = await goalNFT.tokenURI(goal.nft)
+            let ownerOf = await goalNFT.ownerOf(goal.nft)
+            console.log(tokenInfo)
+            console.log(ownerOf)
+        }
     }
     
 });

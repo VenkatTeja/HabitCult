@@ -127,6 +127,7 @@ contract CultManager is Ownable {
             (string memory name,
                 string memory objectiveInWords,
                 string memory category,
+                uint256 _nft, 
                 CultMath.User memory participant,
                 CultMath.User[] memory validators,
                 uint256 validatorNFT) = goalManagerContract.getGoalByID(goalID);

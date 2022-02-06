@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="col-5" style="background-color: #242424; border-radius: 5px;">
-            <div class="card bg-dark text-white">
+            <div class="card bg-dark text-white" *ngIf="targetStatus != 2">
                 <div class="row">
                     <div class="col mt-3">
                         <h5 class="card-title fw-bold">Unlock NFT</h5>
@@ -19,6 +19,18 @@
                     </div>
                     <div class="col text-end">
                         <img src="../../assets/images/Frame 48.png"
+                            style="height: 160px; width: 180px; padding: 15px;" />
+                    </div>
+                </div>
+            </div>
+            <div class="card bg-dark text-white" *ngIf="targetStatus == 2 && nftDetails">
+                <div class="row">
+                    <div class="col mt-3">
+                        <h5 class="card-title fw-bold">NFT Unlocked</h5>
+                        <p>Congratulations</p>
+                    </div>
+                    <div class="col text-end">
+                        <img [src]="nftDetails.image"
                             style="height: 160px; width: 180px; padding: 15px;" />
                     </div>
                 </div>
@@ -35,12 +47,16 @@
                     </div>
                     <div class="col">
                         <span style="font-size: small;">Status</span>
-                        <div style="display: flex;" *ngIf="targetStatus">
-                            <h4>On Track</h4>
+                        <div style="display: flex;" *ngIf="targetStatus <= 2 && targetStatus > 0">
+                            <h4>{{getGoalStatusWordings(targetStatus)}}</h4>
                             <mat-icon style="color: orange;">local_fire_department</mat-icon>
                         </div>
                         <div style="display: flex;" *ngIf="!targetStatus">
                             <h4>You can catch up!</h4>
+                            <mat-icon style="color: red;">trending_down</mat-icon>
+                        </div>
+                        <div style="display: flex;" *ngIf="targetStatus > 2">
+                            <h4>{{getGoalStatusWordings(targetStatus)}}</h4>
                             <mat-icon style="color: red;">trending_down</mat-icon>
                         </div>
                     </div>
