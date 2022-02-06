@@ -205,13 +205,19 @@ contract CultManager is Ownable {
         return true;
     }
 
+    function getExtraAmountNeeded(uint256 betAmount, address user) internal returns (int256) {
+        console.log("Liability: total: %s, locked: %s, betAmount: %s", liabilitiesByUser[user].total, liabilitiesByUser[user].locked, betAmount);
+        int256 extraAmountNeeded = SafeCast.toInt256(betAmount) - SafeCast.toInt256(liabilitiesByUser[user].total) - SafeCast.toInt256(liabilitiesByUser[user].locked);
+        return extraAmountNeeded;
+    }
+
     function addGoal(string memory name, string memory objectiveInWords, string memory category, CultMath.User memory participantUser,
         CultMath.User[] memory validatorUsers, uint64 period, uint64 eventsPerPeriod, uint64 nPeriods, CultMath.TargetType targetType, uint256 betAmount) public returns (uint256) {
         address creator = msg.sender;
         validateGoalParams(category, validatorUsers, period, eventsPerPeriod, nPeriods, betAmount);
-        uint256 extraAmountNeeded = betAmount - liabilitiesByUser[creator].total - liabilitiesByUser[creator].locked;
+        int256 extraAmountNeeded = getExtraAmountNeeded(betAmount, creator);
         if(extraAmountNeeded > 0)
-            transferTokens(creator, extraAmountNeeded);
+            transferTokens(creator, SafeCast.toUint256(extraAmountNeeded));
         return addGoalInternal(creator, name, objectiveInWords, category, participantUser,
         validatorUsers, period, eventsPerPeriod, nPeriods, targetType, betAmount);
     }
@@ -261,10 +267,10 @@ contract CultManager is Ownable {
         liabilities[id] = Liability({amount: betAmount});
 
         UserLiability storage liability = liabilitiesByUser[msg.sender];
-        uint256 extraAmountNeeded = betAmount - liability.total - liability.locked;
-        console.log("extra amoount: %s", extraAmountNeeded);
+        int256 extraAmountNeeded = getExtraAmountNeeded(betAmount, msg.sender);
+        // console.log("extra amoount: %s", extraAmountNeeded);
         if(extraAmountNeeded > 0) {
-            liabilitiesByUser[msg.sender].total += extraAmountNeeded;
+            liabilitiesByUser[msg.sender].total += SafeCast.toUint256(extraAmountNeeded);
         }
         liabilitiesByUser[msg.sender].locked += betAmount;
 

@@ -27,7 +27,7 @@ export class CreateGoalComponent implements OnInit {
     this.reset()
   }
 
-  reset() {
+  async reset() {
     this.createGoalForm = this.formBuilder.group({
       name: [null, [Validators.required]],
       address: [null, [Validators.required]],
@@ -36,6 +36,7 @@ export class CreateGoalComponent implements OnInit {
       goalDescription: '',
       durationOfGoal: [null, [Validators.required]],
       frequency: [null, [Validators.required]],
+      targetType: [0, [Validators.required]],
       betAmount: [null, [Validators.required]],
       validatorName1: '',
       validatorAddress1: '',
@@ -80,6 +81,10 @@ export class CreateGoalComponent implements OnInit {
     }
   }
 
+  fillMe() {
+    this.createGoalForm.patchValue({address: this.globalService.accounts[0]})
+  }
+
   async approveToken() {
     try {
       this.submitted = true;
@@ -100,6 +105,15 @@ export class CreateGoalComponent implements OnInit {
     }
   }
 
+  parseValidator(validators: User[], index: number) {
+    if(this.createGoalForm.value[`validatorAddress${index}`])
+      validators.push({
+        nick: this.createGoalForm.value[`validatorName${index}`],
+        addr: this.createGoalForm.value[`validatorAddress${index}`],
+      })
+    return validators
+  }
+
   async createGoal() {
     try {
       this.submitted = true;
@@ -117,30 +131,16 @@ export class CreateGoalComponent implements OnInit {
         }
         const period = 302400, eventsPerPeriod = 2, nPeriods = 2, targetType = 0, betAmount = inWei;
   
-        let validators: User[] = [
-          {
-            nick: this.createGoalForm.value.validatorName1,
-            addr: this.createGoalForm.value.validatorAddress1,
-          },
-          {
-            nick: this.createGoalForm.value.validatorName2,
-            addr: this.createGoalForm.value.validatorAddress2,
-          },
-          {
-            nick: this.createGoalForm.value.validatorName3,
-            addr: this.createGoalForm.value.validatorAddress3,
-          },
-          {
-            nick: this.createGoalForm.value.validatorName4,
-            addr: this.createGoalForm.value.validatorAddress4,
-          },
-          {
-            nick: this.createGoalForm.value.validatorName5,
-            addr: this.createGoalForm.value.validatorAddress5,
-          },
-        ]
+        let validators: User[] = []
+        validators = this.parseValidator(validators, 1)
+        validators = this.parseValidator(validators, 2)
+        validators = this.parseValidator(validators, 3)
+        validators = this.parseValidator(validators, 4)
+        validators = this.parseValidator(validators, 5)
+        console.log('add goal', {name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount})
         let addGoal = await this.globalService.CultManagerContract.connect(this.globalService.signer).functions.addGoal(name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount)
         console.log(addGoal)
+        addGoal.wait()
         this.loader.loaderEnd()
       } else {
         this.loader.loaderEnd()

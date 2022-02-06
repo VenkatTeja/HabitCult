@@ -6,15 +6,18 @@
                 <input [ngClass]="{ 'invalid-input': submitted && form.name.errors }" class="form-control" type="text"
                     formControlName="name"
                     style="width: 100%;margin-top: 15px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
-                    placeholder="Participant Name" />
+                    placeholder="Participant Nick" />
                 <span *ngIf="submitted && form && form.name.errors && form.name.errors.required"
                     class="invalid-feedback">Name is required</span>
             </div>
             <div>
-                <input class="form-control" type="text" formControlName="address"
-                    [ngClass]="{ 'invalid-input': submitted && form.address.errors }"
-                    style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
-                    placeholder="Participant wallet address" />
+                <div style="display: inline-flex; width: 100%;">
+                    <input class="form-control" type="text" formControlName="address"
+                        [ngClass]="{ 'invalid-input': submitted && form.address.errors }"
+                        style="width: 80%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
+                        placeholder="Participant wallet address" />
+                    <button style="width: 20%;" (click)="fillMe()">Me</button>
+                </div>
                 <span *ngIf="submitted && form && form.address.errors && form.address.errors.required"
                     class="invalid-feedback">Address is required</span>
             </div>
@@ -23,8 +26,10 @@
             style="background-color: #242424; padding: 20px;border-radius: 5px; margin-top: 10px;margin-bottom: 10px;">
             <h5 style="color: white">Goal Setting</h5>
             <div>
+                <span class="input-group-text" id="inputGroup-sizing-default"
+                    style="background-color: #242424;color: #FFFFFF; border-color: #242424; padding-left: 2px;">Select Category</span>
                 <select class="form-select" [ngClass]="{ 'invalid-input': submitted && form.goalCategory.errors }"
-                    id="inputGroupSelect01" formControlName="goalCategory"
+                    id="inputGroupSelect01" formControlName="goalCategory" placeholder="Select category"
                     style="width: 100%;margin-top: 15px;line-height: 1.5; background-color: #191919;color: #FFFFFF; border-color: #191919;">
                     <option disabled selected>Select Category</option>
                     <option value="book-reading">book-reading</option>
@@ -56,6 +61,17 @@
                 <span style="padding-left: 2px;"
                     *ngIf="submitted && form && form.durationOfGoal.errors && form.durationOfGoal.errors.required"
                     class="invalid-feedback">Duration is required</span>
+            </div>
+            <div class="input-group mb-3" style="display: inline-flex">
+                <span class="input-group-text" id="inputGroup-sizing-default"
+                    style="background-color: #242424;color: #FFFFFF; border-color: #242424; padding-left: 2px;">Target Type</span>
+                <select class="form-select" [ngClass]="{ 'invalid-input': submitted && form.goalCategory.errors }"
+                    id="inputGroupSelect01" formControlName="targetType"
+                    style="margin-top: 15px;line-height: 1.5; background-color: #191919;color: #FFFFFF; border-color: #191919;">
+                    <option disabled selected>Target Type</option>
+                    <option value="0">Minimum</option>
+                    <option value="1">Maximum</option>
+                </select>
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="inputGroup-sizing-default"
@@ -92,7 +108,7 @@
             <div class="mb-3">
                 <input class="form-control" type="text" formControlName="validatorName1"
                     style="width: 100%;margin-top: 20px; margin-bottom: 10px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
-                    placeholder="Validator #1 Name" />
+                    placeholder="Validator #1 Nick" />
                 <input class="form-control" formControlName="validatorAddress1" type="text"
                     style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #1 address" />
@@ -100,7 +116,7 @@
             <div class="mb-3">
                 <input formControlName="validatorName2" class="form-control" type="text"
                     style="width: 100%;margin-top: 20px; margin-bottom: 10px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
-                    placeholder="Validator #2 Name" />
+                    placeholder="Validator #2 Nick" />
                 <input formControlName="validatorAddress2" class="form-control" type="text"
                     style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #2 address" />
@@ -108,7 +124,7 @@
             <div class="mb-3">
                 <input class="form-control" formControlName="validatorName3" type="text"
                     style="width: 100%;margin-top: 20px; margin-bottom: 10px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
-                    placeholder="Validator #3 Name" />
+                    placeholder="Validator #3 Nick" />
                 <input formControlName="validatorAddress3" class="form-control" type="text"
                     style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #3 address" />
@@ -116,7 +132,7 @@
             <div class="mb-3">
                 <input class="form-control" formControlName="validatorName4" type="text"
                     style="width: 100%;margin-top: 20px; margin-bottom: 10px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
-                    placeholder="Validator #4 Name" />
+                    placeholder="Validator #4 Nick" />
                 <input formControlName="validatorAddress4" class="form-control" type="text"
                     style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #4 address" />
@@ -124,7 +140,7 @@
             <div class="mb-3">
                 <input class="form-control" formControlName="validatorName5" type="text"
                     style="width: 100%;margin-top: 20px; margin-bottom: 10px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
-                    placeholder="Validator #5 Name" />
+                    placeholder="Validator #5 Nick" />
                 <input formControlName="validatorAddress5" class="form-control" type="text"
                     style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #5 address" />
