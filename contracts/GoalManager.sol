@@ -459,6 +459,7 @@ contract GoalManager is Ownable {
 
     function giveUpAndCloseGoal(uint256 goalID) public returns (uint256) {
         CultMath.Goal storage goal = nftGoalMap[goalID];
+        
         require(msg.sender == goal.creator, "Only creator of goal can close it");
         uint256 originalAmount = liabilities[goalID].amount;
         uint256 returnAmount = SafeMath.div(liabilities[goalID].amount * (10000 - penalty), 10000);

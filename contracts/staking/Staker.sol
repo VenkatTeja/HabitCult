@@ -67,6 +67,8 @@ contract Staker {
         address[] memory pair = new address[](2);
         pair[0] = tokenAddr;
         pair[1] = token2;
+        console.log("halfAmount: %s", halfAmount);
+        
         uint[] memory amounts = routerContract.swapExactTokensForTokens(halfAmount, 0, pair, address(this), block.timestamp + 20);
         console.log("amounts: %s, %s", amounts[0], amounts[1]);
 
@@ -77,7 +79,7 @@ contract Staker {
         console.log("amountA: %s, amountB: %s", amountA, amountB);
 
         return liquidity;
-        
+
         // Now send the tokens to beefy contract
         // beefy.deposit(amount);
     }

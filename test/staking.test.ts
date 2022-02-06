@@ -47,16 +47,16 @@ describe("Staker", function () {
 
         let beefyContract = new web3.eth.Contract(routerABI.abi, beefyAddr);
         let pairContract = new web3.eth.Contract(pairABI.abi, pair);
-        let stakeAmount = web3.utils.toWei(web3.utils.toBN(20)).toString()
+        let stakeAmount = web3.utils.toWei(web3.utils.toBN(20), 'mwei').toString()
         console.log({stakeAmount})
         
         // checking balance before. Should be 0
-        let balanceOnBeefy = web3.utils.fromWei(await myLib.call(beefyContract.methods.balanceOf(staker.address)))
+        let balanceOnBeefy = web3.utils.fromWei(await myLib.call(pairContract.methods.balanceOf(staker.address)))
         console.log({balanceOnBeefy})
         
         // Call stake method
-        let liquidity = await staker.callStatic.stake(stakeAmount)
-        console.log(liquidity)
+        // let liquidity = await staker.callStatic.stake(stakeAmount)
+        // console.log(liquidity)
 
         let tx = await staker.stake(stakeAmount)
         await tx.wait();
