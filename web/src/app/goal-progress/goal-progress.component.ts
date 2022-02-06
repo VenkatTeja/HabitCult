@@ -45,6 +45,10 @@ export class GoalProgressComponent implements OnInit {
     console.log({ resp: this.nftDetails })
   }
 
+  redirectToWebflow() {
+    window.location.href = 'https://habitcult.webflow.io/'
+  }
+
   async ngOnInit() {
     console.log(this.goalId)
     const { goal, target, result } = await this.contractService.getGoalDetails(this.goalId)

@@ -46,9 +46,11 @@
                 </div>
             </div>
         </div>
-        <div class="rounded col-md bg-dark p-3 mx-2">
+        <div class="rounded col-md bg-dark p-3 mx-2" style="cursor: pointer; display: flex; align-items: center;" (click)="redirectToWebflow()">
             <h2 class="fw-bolder">HOW IT <br /> WORKS</h2>
-            <a class="text-primary" style="cursor: pointer;">read more</a>
+            <div class="col text-end">
+                <mat-icon>east</mat-icon>
+            </div>
         </div>
     </div>
     <div style="margin-bottom: 10px;" class="col mt-4 d-flex justify-content-center">

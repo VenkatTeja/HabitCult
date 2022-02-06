@@ -17,7 +17,7 @@ export class EndOfGoalComponent implements OnInit {
   totalWeeks: any
   targetStatus = 0
   states: any = {
-    0: { primary: 'Need to start', secondary: 'Begin a habit and change your lifestyle!', img: '' },
+    0: { primary: 'Need to start', secondary: 'Begin a habit and change your lifestyle!', img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flat_tick_icon.svg/768px-Flat_tick_icon.svg.png" },
     1: { primary: 'In Progress', secondary: 'Keep going. Practice makes man perfect!', img: '../../assets/images/Frame 32.png' },
     2: { primary: 'Congratulations', secondary: 'You have completed the goal.', img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flat_tick_icon.svg/768px-Flat_tick_icon.svg.png" },
     3: { primary: 'You tried your best! ', secondary: 'Repeat the challenge to recover and earn!', img: '../../assets/images/Frame 39.png' },
@@ -49,6 +49,11 @@ export class EndOfGoalComponent implements OnInit {
       this.loader.loaderEnd()
     }
   }
+
+  redirectToWebflow() {
+    window.location.href = 'https://habitcult.webflow.io/'
+  }
+
 
   async ngOnInit() {
     console.log(this.goalId)

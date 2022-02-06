@@ -1,17 +1,17 @@
 <div class="row" style="margin-top: 30px;">
     <div class="col-8">
         <div style="padding: 0 10px">
-            <div class="card text-white m-2" style="width: 100%; background-color: #2E2E2F; cursor: pointer;">
+            <div class="card text-white m-2" style="width: 100%; color: #ECDBBA; background-color: #2E2E2F; cursor: pointer; border: 1px solid #ECDBBA;">
                 <div style="width: 100%; padding-top: 15px;">
                     <div style="width: 50%; text-align: center;float: left;">
                         <p style="font-size: 20px;">{{money.total.toLocaleString(undefined, {minimumFractionDigits:
                             2})}} USDT</p>
-                        <p>Total</p>
+                        <h3>Total</h3>
                     </div>
                     <div style="width: 50%; text-align: center;float: left;">
                         <p style="font-size: 20px;">{{money.locked.toLocaleString(undefined, {minimumFractionDigits:
                             2})}} USDT</p>
-                        <p>Locked</p>
+                        <h3>Locked</h3>
                     </div>
                 </div>
             </div>
@@ -25,12 +25,12 @@
                         <p class="card-text">ADD GOAL</p>
                     </div>
                 </div>
-                <div *ngFor="let goal of goals;let i = index" class="card text-white m-2"
+                <div *ngFor="let goal of goals;let i = index" [ngStyle]="{'border-color':getColors(i)}" class="card text-white m-2"
                     style="max-width: 18rem; background-color: #2E2E2F;" (click)="goalPage(goal.id)">
                     <div class="card-body" [ngStyle]="{'color': getColors(i)}">
-                        <h5 class="card-title">{{goal.name}}</h5>
+                        <h5 class="card-title" style="font-weight: bolder;">{{goal.name}}</h5>
                         <p class="card-text" style="font-size: small;">{{goal.objectiveInWords}}</p>
-                        <small>#{{goal.category}}</small>
+                        <small style="font-style: italic;">#{{goal.category}}</small>
                     </div>
                 </div>
             </div>

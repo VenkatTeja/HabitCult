@@ -4,6 +4,7 @@ import { BigNumber, ethers, Signer } from "ethers";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingService } from '../loader.service';
 import { Router } from '@angular/router';
+import { ContractService } from '../services/contract.service';
 
 export interface User {
   addr: string;
@@ -19,13 +20,18 @@ export class CreateGoalComponent implements OnInit {
   isTokenAllowed = false;
   public createGoalForm!: FormGroup;
   submitted = false
-
-  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private loader: LoadingService, private router: Router) { }
+  categories: any = []
+  constructor(private contractService: ContractService, private globalService: GlobalService, private formBuilder: FormBuilder, private loader: LoadingService, private router: Router) { }
   get form() { return this.createGoalForm.controls; }
 
   ngOnInit(): void {
     this.checkTokenAllowance()
     this.reset()
+    this.getCategories()
+  }
+
+  async getCategories() {
+    this.categories = await this.contractService.getCategories()
   }
 
   async reset() {
@@ -37,7 +43,7 @@ export class CreateGoalComponent implements OnInit {
       goalDescription: '',
       durationOfGoal: [null, [Validators.required]],
       frequency: [null, [Validators.required]],
-      targetType: [0, [Validators.required]],
+      targetType: [null, [Validators.required]],
       betAmount: [null, [Validators.required]],
       validatorName1: '',
       validatorAddress1: '',
@@ -62,10 +68,10 @@ export class CreateGoalComponent implements OnInit {
     try {
       this.loader.loaderStart()
       await this.globalService.waitForConnect()
-  
+
       // Check if token is already allowed
       let allowance: BigNumber[] = await this.globalService.TokenContract.functions.allowance(await this.globalService.signer.getAddress(), this.globalService.CultManagerAddress);
-  
+
       let inWei = ethers.utils.parseUnits(this.betAmount.toString(), this.globalService.TokenDecimals)
       let weiToEther = ethers.utils.formatUnits(inWei, this.globalService.TokenDecimals)
       console.log({ betAmount: this.betAmount.toString(), inWei: inWei.toString(), weiToEther, allownace: allowance[0].toNumber() })
@@ -83,7 +89,7 @@ export class CreateGoalComponent implements OnInit {
   }
 
   fillMe() {
-    this.createGoalForm.patchValue({address: this.globalService.accounts[0]})
+    this.createGoalForm.patchValue({ address: this.globalService.accounts[0] })
   }
 
   async approveToken() {
@@ -107,7 +113,7 @@ export class CreateGoalComponent implements OnInit {
   }
 
   parseValidator(validators: User[], index: number) {
-    if(this.createGoalForm.value[`validatorAddress${index}`])
+    if (this.createGoalForm.value[`validatorAddress${index}`])
       validators.push({
         nick: this.createGoalForm.value[`validatorName${index}`],
         addr: this.createGoalForm.value[`validatorAddress${index}`],
@@ -131,14 +137,14 @@ export class CreateGoalComponent implements OnInit {
           nick: this.createGoalForm.value.name
         }
         const period = 30, eventsPerPeriod = this.createGoalForm.value.frequency, nPeriods = this.createGoalForm.value.durationOfGoal, targetType = Number(this.createGoalForm.value.targetType), betAmount = inWei;
-  
+
         let validators: User[] = []
         validators = this.parseValidator(validators, 1)
         validators = this.parseValidator(validators, 2)
         validators = this.parseValidator(validators, 3)
         validators = this.parseValidator(validators, 4)
         validators = this.parseValidator(validators, 5)
-        console.log('add goal', {name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount})
+        console.log('add goal', { name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount })
         let addGoal = await this.globalService.CultManagerContract.connect(this.globalService.signer).functions.addGoal(name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount)
         console.log(addGoal)
         await addGoal.wait(2)
