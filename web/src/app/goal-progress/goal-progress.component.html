@@ -13,7 +13,8 @@
             <div class="card bg-dark text-white" *ngIf="targetStatus != 2">
                 <div class="row">
                     <div class="col mt-3">
-                        <h5 class="card-title fw-bold">Unlock NFT</h5>
+                        <h5 *ngIf="!isPass" class="card-title fw-bold">Unlock NFT</h5>
+                        <h5 *ngIf="isPass" class="card-title fw-bold">NFT Unlocked</h5>
                         <p>Get access to exclusive merch and more.</p>
                     </div>
                     <div class="col text-end">
