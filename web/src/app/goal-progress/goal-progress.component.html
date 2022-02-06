@@ -13,7 +13,8 @@
             <div class="card bg-dark text-white" *ngIf="targetStatus != 2">
                 <div class="row">
                     <div class="col mt-3">
-                        <h5 class="card-title fw-bold">Unlock NFT</h5>
+                        <h5 *ngIf="!isPass" class="card-title fw-bold">Unlock NFT</h5>
+                        <h5 *ngIf="isPass" class="card-title fw-bold">NFT Unlocked</h5>
                         <p>Get access to exclusive merch and more.</p>
                     </div>
                     <div class="col text-end">
@@ -48,15 +49,15 @@
                         <span style="font-size: small;">Status</span>
                         <div style="display: flex;" *ngIf="targetStatus <= 2 && targetStatus > 0">
                             <h4>{{getGoalStatusWordings(targetStatus)}}</h4>
-                            <mat-icon style="color: orange;">local_fire_department</mat-icon>
+                            <mat-icon style="color: orange; margin-left: 5px;">local_fire_department</mat-icon>
                         </div>
                         <div style="display: flex;" *ngIf="!targetStatus">
                             <h4>You can catch up!</h4>
-                            <mat-icon style="color: red;">trending_down</mat-icon>
+                            <mat-icon style="color: red; margin-left: 5px;">trending_down</mat-icon>
                         </div>
                         <div style="display: flex;" *ngIf="targetStatus > 2">
                             <h4>{{getGoalStatusWordings(targetStatus)}}</h4>
-                            <mat-icon style="color: red;">trending_down</mat-icon>
+                            <mat-icon style="color: red; margin-left: 5px;">trending_down</mat-icon>
                         </div>
                     </div>
                 </div>

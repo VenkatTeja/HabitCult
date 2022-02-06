@@ -40,11 +40,11 @@ export class HistoryComponent implements OnInit {
         for (let j = 0; j< this.validators.length; j++) {
           let status = await this.getValidatorStatus(this.goalId, this.validators[j].addr, <number> res1)
           v.push({
-            name: this.validators[j],
-            validationStatus: status
+            name: this.validators[j].nick,
+            validationStatus: status || false
           })
         }
-        v.length && this.history.push(v)
+        this.history.push(v)
       }
     }
     console.log(this.history);

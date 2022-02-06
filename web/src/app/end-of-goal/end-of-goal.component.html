@@ -53,7 +53,7 @@
     </div>
     <div style="margin-bottom: 10px;" class="col mt-4 d-flex justify-content-center">
         <button class="btn btn-secondary" (click)="withDrawAndExit()" style="margin-right: 10px; padding: 4px 20px; background: none; border: 1px solid gray; color: gray; border-radius: 5px;">WITHDRAW AND EXIT GOAL</button>
-        <button class="btn btn-success" (click)="repeatGoal()" style="background: none; padding: 4px 20px; border: 1px solid lightgreen; color: lightgreen; border-radius: 5px;">REPEAT CHALLENGE</button>
+        <button class="btn btn-success" *ngIf="targetStatus>1" (click)="repeatGoal()" style="background: none; padding: 4px 20px; border: 1px solid lightgreen; color: lightgreen; border-radius: 5px;">REPEAT CHALLENGE</button>
     </div>
 
 </div>

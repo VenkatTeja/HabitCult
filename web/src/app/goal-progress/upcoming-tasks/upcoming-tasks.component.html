@@ -1,12 +1,12 @@
-<div class="col-12" *ngIf="upcomingTasks.length"
+<div class="col-12" *ngIf="currentWeek"
     style="height: 80px; padding: 30px; background-color: #191919; border:2px solid #00E793; border-radius: 10px; display: flex; align-items: center;">
     <mat-icon style="color: #00E793; font-size: 15px; align-self: baseline;">circle</mat-icon>
     <h4 style="margin-bottom: 0px; margin-right: 20px;">Week {{currentWeek}}</h4>
-    <input class="form-control" type="text"
+    <input class="form-control" type="text" [(ngModel)] = "frequency"
         style="width: 30%; background-color: #191919;color: #FFFFFF; margin-right: 10px;" placeholder="Frequency" />
-    <button type="button" style="background-color: #00E793; " class="btn btn-success">SUBMIT</button>
+    <button type="button" (click)="submitFrequency()" style="background-color: #00E793; " class="btn btn-success">SUBMIT</button>
 </div>
-<div *ngIf="upcomingTasks.length > 1">
+<div *ngIf="upcomingTasks.length">
     <div class="col-12" *ngFor="let block of upcomingTasks;let i = index"
         style="height: 80px; padding: 30px; margin-top: 10px; background-color: #191919; border-radius: 10px; display: flex; align-items: center;">
         <mat-icon style="color: #F2C94C; font-size: 15px; align-self: baseline;">circle</mat-icon>

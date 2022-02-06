@@ -124,7 +124,14 @@ contract CultManager is Ownable {
         GoalManager goalManagerContract = GoalManager(goalManager);
         (bool isFinalized, bool isPass) = goalManagerContract.logActivity(msg.sender, goalID, events);
         if(isFinalized && isPass) {
-            (string memory name,
+            mintAndSet(goalID);
+        }
+        return (isFinalized, isPass);
+    }
+
+    function mintAndSet(uint256 goalID) internal {
+        GoalManager goalManagerContract = GoalManager(goalManager);
+        (string memory name,
                 string memory objectiveInWords,
                 string memory category,
                 uint256 _nft, 
@@ -133,7 +140,5 @@ contract CultManager is Ownable {
                 uint256 validatorNFT) = goalManagerContract.getGoalByID(goalID);
             uint256 nft = mintNFT(participant.addr, category, true);
             goalManagerContract.setNFTID(goalID, nft);
-        }
-        return (isFinalized, isPass);
     }
 }

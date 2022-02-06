@@ -20,7 +20,7 @@ export class GoalProgressComponent implements OnInit {
   frequency: any
   totalWeeks: any
   targetStatus: TargetStatus = 0;
-
+  isPass = false
   nftID: number = -1;
   nftDetails: any = null
 
@@ -36,13 +36,13 @@ export class GoalProgressComponent implements OnInit {
     let url = location.href.split('/')
     this.goalId = Number(url[url.length - 1])
   }
-  
+
   async getNFT() {
     let tokenInfo = await this.globalService.NFTContract.functions.tokenURI(this.nftID)
-    console.log({tokenInfo})
+    console.log({ tokenInfo })
     let resp = await fetch(tokenInfo[0])
     this.nftDetails = await resp.json()
-    console.log({resp: this.nftDetails})
+    console.log({ resp: this.nftDetails })
   }
 
   async ngOnInit() {
@@ -56,17 +56,19 @@ export class GoalProgressComponent implements OnInit {
     this.frequency = Number(target.eventsPerPeriod)
     this.totalWeeks = Number(target.nPeriods)
     this.targetStatus = target.targetStatus
-    if(this.targetStatus == 2)
+    if (this.targetStatus == 2) {
       await this.getNFT()
+    }
+    this.isPass = result.isPass
   }
 
   getGoalStatusWordings(id: TargetStatus) {
-    if(id > 4 || id < 0) {
+    if (id > 4 || id < 0) {
       return alert('Incorrect goal status')
     }
     return this.states[id].secondary
   }
-  
+
   async endGoal() {
     try {
       this.loader.loaderStart()

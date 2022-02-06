@@ -13,8 +13,8 @@ const IERC20 = require('./abis/IERC20.abi.json');
 export class GlobalService {
   // web3 = new Web3('http://localhost:8545');
   provider = new ethers.providers.Web3Provider(window.ethereum);
-  CultManagerAddress = '0xbaee9B65349929Bd78f9878555bF78027Df7f101'; // update this
-  GoalManagerAddress = '0x701dC26AcaD119E892695bb6A06956e2165C2052';
+  CultManagerAddress = '0xa7480B62a657555f6727bCdb96953bCC211FFbaC'; // update this
+  GoalManagerAddress = '0x08677Af0A7F54fE2a190bb1F75DE682fe596317e';
   NFTAddress = "0x2D6E6A6430F0121d6949D743DF54730b40C5c74F"
 
   StakeCoin = '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';

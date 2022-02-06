@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { GlobalService } from 'src/app/global.service';
+import { LoadingService } from 'src/app/loader.service';
 import { ContractService } from 'src/app/services/contract.service';
 
 @Component({
@@ -13,7 +15,8 @@ export class UpcomingTasksComponent implements OnInit {
   upcomingTasks: Array<any> = []
   currentWeek = 0
   validators: any
-  constructor(private contractService: ContractService, private globalService: GlobalService) {
+  frequency: number = 0
+  constructor(private contractService: ContractService, private loader: LoadingService, private router: Router) {
     let url = location.href.split('/')
     this.goalId = Number(url[url.length - 1])
   }
@@ -25,11 +28,17 @@ export class UpcomingTasksComponent implements OnInit {
       res = res[0].map((a: any) => Number(a))
     }
     console.log(res);
-    const res1 = Number(await this.contractService.getCurrentBlockToLog(this.goalId))
-    console.log(Number(res1));
+    let res1
+    try {
+      res1 = Number(await this.contractService.getCurrentBlockToLog(this.goalId))
+      console.log(Number(res1));
+    } catch(err) {
+      this.upcomingTasks = res.map((i:number, index:number) => index+1);
+      return;
+    }
     for (let i = 1; i<res.length+1;i++) {
-      let block = res[i]
-      if (res1 < block) {
+      let block = res[i-1]
+      if (res1 <= block) {
         if (this.currentWeek) {
           this.upcomingTasks.push(i)
         } else {
@@ -39,6 +48,21 @@ export class UpcomingTasksComponent implements OnInit {
     }
     console.log(this.upcomingTasks);
     
+  }
+
+  async submitFrequency() {
+    try {
+      this.loader.loaderStart()
+      await this.contractService.logActivity(this.goalId, this.frequency)
+      const {result} = await this.contractService.getGoalDetails(this.goalId)
+      console.log({result})
+      if (result[0] && result[0].isPass) {
+        this.router.navigate([`end-of-goal/${this.goalId}`])
+      }
+      this.loader.loaderEnd()
+    } catch(err) {
+      this.loader.loaderEnd()
+    }
   }
 
   async getGoalDetails(id: number) {
