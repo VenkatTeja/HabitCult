@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { ethers, Signer } from 'ethers';
 const cultManagerJs = require('../../../artifacts/contracts/CultManager.sol/CultManager.json');
+const goalManagerJS = require('../../../artifacts/contracts/GoalManager.sol/GoalManager.json');
 import { CultManager } from '../../../typechain/CultManager';
 const IERC20 = require('./abis/IERC20.abi.json');
 
@@ -11,12 +12,14 @@ const IERC20 = require('./abis/IERC20.abi.json');
 export class GlobalService {
   // web3 = new Web3('http://localhost:8545');
   provider = new ethers.providers.Web3Provider(window.ethereum);
-  CultManagerAddress = '0x08677Af0A7F54fE2a190bb1F75DE682fe596317e'; // update this
+  CultManagerAddress = '0x488b54Cf1b3F65Fa0cf76889ccb78afD2a054f4E'; // update this
+  GoalManagerAddress = '0x7188450134eFbda4591D303dA02BE644Bb4B63Fb';
   StakeCoin = '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
   TokenDecimals = 6;
 
   signer = this.provider.getSigner();
   CultManagerABI: any = cultManagerJs.abi;
+  GoalManagerABI: any = goalManagerJS.abi;
 
   TokenContract = new ethers.Contract(
     this.StakeCoin,
@@ -29,6 +32,12 @@ export class GlobalService {
     cultManagerJs.abi,
     this.provider
   );
+
+  GoalManagerContract = new ethers.Contract(
+      this.GoalManagerAddress,
+      goalManagerJS.abi,
+      this.provider
+  )
 
   public accounts: string[] = [];
   isConnected = false;

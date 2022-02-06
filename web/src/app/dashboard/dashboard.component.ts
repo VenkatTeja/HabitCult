@@ -24,11 +24,12 @@ export class DashboardComponent implements OnInit {
     await this.globalService.waitForConnect();
     console.log(await this.globalService.signer.getAddress());
     const goalIDs =
-      await this.globalService.CultManagerContract.functions.getGoals(
+      await this.globalService.GoalManagerContract.functions.getGoals(
         await this.globalService.signer.getAddress()
       );
+    console.log('mygoals', {goalIDs})
     for (let i = 0; i < goalIDs[0].length; i++) {
-      let goal = await this.globalService.CultManagerContract.functions.getGoalByID(goalIDs[0][i])
+      let goal = await this.globalService.GoalManagerContract.functions.getGoalByID(goalIDs[0][i])
       console.log(goal)
       this.goals.push(goal)
     }

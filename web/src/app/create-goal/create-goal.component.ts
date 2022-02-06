@@ -130,7 +130,7 @@ export class CreateGoalComponent implements OnInit {
           addr: this.createGoalForm.value.address || await this.globalService.signer.getAddress(),
           nick: this.createGoalForm.value.name
         }
-        const period = 10, eventsPerPeriod = 2, nPeriods = 2, targetType = 0, betAmount = inWei;
+        const period = 30, eventsPerPeriod = 2, nPeriods = 2, targetType = 0, betAmount = inWei;
   
         let validators: User[] = []
         validators = this.parseValidator(validators, 1)

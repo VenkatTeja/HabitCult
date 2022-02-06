@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
 library CultMath {
     enum TargetType{ MIN, MAX }
-    enum TargetStatus{ OFF, RUNNING, SUCCESSFUL, FAIL }
+    enum TargetStatus{ OFF, RUNNING, SUCCESSFUL, FAIL, GAVEUP }
 
     struct User {
         string nick;

@@ -35,8 +35,8 @@ contract CultManager is Ownable {
         return ("MIN", "MAX");
     }
 
-    function getTargetStatuses() public pure returns (string memory, string memory, string memory, string memory) {
-        return ("OFF", "RUNNING", "SUCCESSFUL", "FAIL");
+    function getTargetStatuses() public pure returns (string memory, string memory, string memory, string memory, string memory) {
+        return ("OFF", "RUNNING", "SUCCESSFUL", "FAIL", "GAVEUP");
     }
 
     function getCategoryIndexes() public view returns (string[] memory) {

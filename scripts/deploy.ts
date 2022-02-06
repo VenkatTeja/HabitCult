@@ -26,8 +26,12 @@ async function main() {
   const staker = await Staker.deploy();
 
   let token = myLib.TOKENS.USDT;
+
+  const GoalManager = await ethers.getContractFactory("GoalManager");
+  const goalManager = await GoalManager.deploy(token.addr);
+
   const CultManager = await ethers.getContractFactory("CultManager");
-  const cultManager = await CultManager.deploy(token.addr);
+  const cultManager = await CultManager.deploy(goalManager.address);
 
   const GoalNFT = await ethers.getContractFactory("GoalNFT");
   const goalNFT = await GoalNFT.deploy("http://localhost:3000/nft/");
@@ -36,11 +40,16 @@ async function main() {
   await staker.deployed();
   await cultManager.deployed();
   await goalNFT.deployed();
-  
+  await goalManager.deployed();
+
+  console.log("GoalManager Contract deployed to:", goalManager.address);
   console.log("CultManager Contract deployed to:", cultManager.address);
   console.log("GoalNFT Contract deployed to:", goalNFT.address);
   console.log("Staking Contract deployed to:", staker.address);
   console.log('\n=============================')
+
+  let setParent = await goalManager.connect(owner).setParent(cultManager.address);
+  await setParent.wait()
   
   // FILL user wallet with USDT
   let balBefore = myLib.getEtherNumber(web3, await myLib.getTokenBalance(web3, token.addr, user.address), token.decimals)
@@ -72,7 +81,7 @@ async function main() {
   await setNFT.wait();
 
   // approve token
-  await myLib.approveToken(web3, token.addr, cultManager.address, '20000000', user)
+  await myLib.approveToken(web3, token.addr, goalManager.address, '20000000', user)
   console.log('Token approved')
 
   // Add goal

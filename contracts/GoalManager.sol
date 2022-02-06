@@ -460,6 +460,7 @@ contract GoalManager is Ownable {
         uint256 returnAmount = SafeMath.div(liabilities[goalID].amount * (10000 - penalty), 10000);
         IERC20 token = IERC20(stakingToken);
         liabilities[goalID].amount = 0;
+        goal.target.targetStatus = CultMath.TargetStatus.GAVEUP;
         liabilitiesByUser[msg.sender].total -= originalAmount;
         liabilitiesByUser[msg.sender].locked -= originalAmount;
         token.approve(goal.creator, returnAmount);
