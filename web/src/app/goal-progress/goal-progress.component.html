@@ -4,9 +4,8 @@
             <div class="card bg-dark text-white">
                 <img src="../../assets/images/Group 46.png" style="align-self: flex-end;height: 160px; width: 160px;"
                     class="card-img" alt="You are on track">
-                <div class="card-img-overlay">
-                    <h1 class="card-title fw-bolder">You're</h1>
-                    <h1 class="card-title fw-bolder">On track!</h1>
+                <div class="card-img-overlay" style="display:flex; align-items:center">
+                    <h1 class="card-title fw-bolder">{{states[targetStatus].primary}}</h1>
                 </div>
             </div>
         </div>
@@ -95,10 +94,11 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-2">
-                <button type="button" (click)="endGoal()" style="width: 100%; border: 1px solid #EB5757; padding: 10px;" class="btn btn-outline-danger">END GOAL AND WITHDRAW</button>
+            <div class="mt-2" *ngIf="targetStatus<2">
+                <button type="button" (click)="endGoal()" style="width: 100%; border: 1px solid #EB5757; padding: 10px;"
+                    class="btn btn-outline-danger">END GOAL AND WITHDRAW</button>
             </div>
-            <div class="mt-2 text-center" style="opacity: 0.5; font-size: small;">
+            <div *ngIf="targetStatus<2" class="mt-2 text-center" style="opacity: 0.5; font-size: small;">
                 Penalty of 5% will be levied upon the staking amount
             </div>
         </div>

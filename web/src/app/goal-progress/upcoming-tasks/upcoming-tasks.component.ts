@@ -11,8 +11,8 @@ export class UpcomingTasksComponent implements OnInit {
 
   goalId: any
   upcomingTasks: Array<any> = []
+  currentWeek = 0
   validators: any
-  totalPeriods!: number
   constructor(private contractService: ContractService, private globalService: GlobalService) {
     let url = location.href.split('/')
     this.goalId = Number(url[url.length - 1])
@@ -23,15 +23,18 @@ export class UpcomingTasksComponent implements OnInit {
     let res = await this.contractService.getPeriodsToLog(this.goalId)
     if (res.length && res[0] && res[0].length) {
       res = res[0].map((a: any) => Number(a))
-      this.totalPeriods = res.length
     }
     console.log(res);
     const res1 = Number(await this.contractService.getCurrentBlockToLog(this.goalId))
     console.log(Number(res1));
-    for (let i = 0; i<res.length;i++) {
+    for (let i = 1; i<res.length+1;i++) {
       let block = res[i]
       if (res1 < block) {
-        this.upcomingTasks.push(block)
+        if (this.currentWeek) {
+          this.upcomingTasks.push(i)
+        } else {
+          this.currentWeek = i
+        }
       }
     }
     console.log(this.upcomingTasks);
@@ -40,6 +43,7 @@ export class UpcomingTasksComponent implements OnInit {
 
   async getGoalDetails(id: number) {
     const goalDetails = await this.contractService.getGoalDetails(id)
+    console.log('Goal details', goalDetails)
     this.validators = goalDetails.goal.validators;
     console.log(this.validators)
     return

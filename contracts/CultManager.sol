@@ -120,7 +120,7 @@ contract CultManager is Ownable {
         return goalManagerContract.addGoal(msg.sender, name, objectiveInWords, category, participantUser, validatorUsers, period, eventsPerPeriod, nPeriods, targetType, betAmount);
     }
 
-    function logActivity(uint256 goalID, uint64 events) external returns (bool) {
+    function logActivity(uint256 goalID, uint64 events) external returns (bool isFinalized, bool isPass) {
         GoalManager goalManagerContract = GoalManager(goalManager);
         (bool isFinalized, bool isPass) = goalManagerContract.logActivity(msg.sender, goalID, events);
         if(isFinalized && isPass) {
@@ -134,5 +134,6 @@ contract CultManager is Ownable {
             uint256 nft = mintNFT(participant.addr, category, true);
             goalManagerContract.setNFTID(goalID, nft);
         }
+        return (isFinalized, isPass);
     }
 }

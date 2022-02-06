@@ -1,7 +1,7 @@
 <div class="col-12" *ngIf="upcomingTasks.length"
     style="height: 80px; padding: 30px; background-color: #191919; border:2px solid #00E793; border-radius: 10px; display: flex; align-items: center;">
     <mat-icon style="color: #00E793; font-size: 15px; align-self: baseline;">circle</mat-icon>
-    <h4 style="margin-bottom: 0px; margin-right: 20px;">Week {{totalPeriods - upcomingTasks.length + 1}}</h4>
+    <h4 style="margin-bottom: 0px; margin-right: 20px;">Week {{currentWeek}}</h4>
     <input class="form-control" type="text"
         style="width: 30%; background-color: #191919;color: #FFFFFF; margin-right: 10px;" placeholder="Frequency" />
     <button type="button" style="background-color: #00E793; " class="btn btn-success">SUBMIT</button>
@@ -9,10 +9,8 @@
 <div *ngIf="upcomingTasks.length > 1">
     <div class="col-12" *ngFor="let block of upcomingTasks;let i = index"
         style="height: 80px; padding: 30px; margin-top: 10px; background-color: #191919; border-radius: 10px; display: flex; align-items: center;">
-        <div *ngIf="i>0">
-            <mat-icon style="color: #F2C94C; font-size: 15px; align-self: baseline;">circle</mat-icon>
-            <h4 style="margin-bottom: 0px;">Week {{totalPeriods - upcomingTasks.length + 1}}</h4>
-            <i style="margin-left: 25px;">Upcoming</i>
-        </div>
+        <mat-icon style="color: #F2C94C; font-size: 15px; align-self: baseline;">circle</mat-icon>
+        <h4 style="margin-bottom: 0px;">Week {{block}}</h4>
+        <i style="margin-left: 25px;">Upcoming</i>
     </div>
 </div>

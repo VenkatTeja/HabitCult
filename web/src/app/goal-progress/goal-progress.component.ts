@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { GlobalService } from '../global.service';
 import { ContractService } from '../services/contract.service';
 import { ethers } from "ethers";
+import { LoadingService } from '../loader.service';
+import { Router } from '@angular/router';
 
 type TargetStatus = 0 | 1 | 2 | 3 | 4
+
 @Component({
   selector: 'app-goal-progress',
   templateUrl: './goal-progress.component.html',
@@ -21,16 +24,17 @@ export class GoalProgressComponent implements OnInit {
   nftID: number = -1;
   nftDetails: any = null
 
-  userStates = {
-    0: 'Need to Start',
-    1: 'In Progress', // should be running
-    2: 'Completed',
-    3: 'Failed',
-    4: 'Gave Up'
+  states: any = {
+    0: { primary: 'You Need to start!', secondary: 'Need to start' },
+    1: { primary: "You're on track!", secondary: 'On Track' },
+    2: { primary: 'You are a champ!', secondary: 'Completed' },
+    3: { primary: 'You can do well next time!', secondary: 'Failed' },
+    4: { primary: 'Try again!', secondary: 'Gave Up' },
   }
-  constructor(private contractService: ContractService, private globalService: GlobalService) { 
+
+  constructor(private globalService: GlobalService, private contractService: ContractService, private loader: LoadingService, private router: Router) {
     let url = location.href.split('/')
-    this.goalId = Number(url[url.length-1])
+    this.goalId = Number(url[url.length - 1])
   }
   
   async getNFT() {
@@ -43,7 +47,7 @@ export class GoalProgressComponent implements OnInit {
 
   async ngOnInit() {
     console.log(this.goalId)
-    const {goal, target, result} = await this.contractService.getGoalDetails(this.goalId)
+    const { goal, target, result } = await this.contractService.getGoalDetails(this.goalId)
     console.log(goal, target, result)
     this.goalName = goal.name;
     this.nftID = goal.nft;
@@ -60,11 +64,19 @@ export class GoalProgressComponent implements OnInit {
     if(id > 4 || id < 0) {
       return alert('Incorrect goal status')
     }
-    return this.userStates[id]
+    return this.states[id].secondary
   }
   
   async endGoal() {
-    const res = await this.contractService.giveUpAndCloseGoal(this.goalId)
+    try {
+      this.loader.loaderStart()
+      const res = await this.contractService.giveUpAndCloseGoal(this.goalId)
+      console.log(res);
+      this.router.navigate(['dashboard'])
+      this.loader.loaderEnd()
+    } catch (err) {
+      this.loader.loaderEnd()
+    }
   }
 
 }
