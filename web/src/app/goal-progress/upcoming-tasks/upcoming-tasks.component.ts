@@ -47,11 +47,6 @@ export class UpcomingTasksComponent implements OnInit {
       }
     }
     console.log(this.upcomingTasks);
-    this.setIntervalToFetch()
-  }
-
-  setIntervalToFetch() {
-    setInterval(() => this.ngOnInit(), 10000)
   }
 
   async submitFrequency() {

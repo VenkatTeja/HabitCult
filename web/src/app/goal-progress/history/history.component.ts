@@ -48,11 +48,6 @@ export class HistoryComponent implements OnInit {
       }
     }
     console.log(this.history);
-    this.setIntervalToFetch()
-  }
-
-  setIntervalToFetch() {
-    setInterval(() => this.ngOnInit(), 10000)
   }
 
   async getGoalDetails(id: number) {
