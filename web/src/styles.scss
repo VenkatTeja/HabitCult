@@ -1,4 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
 body { background-color: black; }
 ::-webkit-scrollbar {
     width: 5px;
@@ -16,3 +15,11 @@ body { background-color: black; }
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: "Rubik", "Helvetica Neue", sans-serif; }
+.invalid-input {
+    border: 1px solid red !important;
+}
+.invalid-feedback {
+    display: flex;
+    font-size: smaller;
+    color: red;
+}

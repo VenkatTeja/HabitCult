@@ -17,6 +17,7 @@ import { UpcomingTasksComponent } from './goal-progress/upcoming-tasks/upcoming-
 import { HistoryComponent } from './goal-progress/history/history.component';
 // import { ContractService } from './services/contract.service';
 import { MetamaskMissingComponent } from './metamask-missing/metamask-missing.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,8 @@ import { MetamaskMissingComponent } from './metamask-missing/metamask-missing.co
     BrowserAnimationsModule,
     MatIconModule,
     MatButtonModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [GlobalService],
   bootstrap: [AppComponent],
