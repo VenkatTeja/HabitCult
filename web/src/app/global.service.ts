@@ -1,8 +1,8 @@
-
 // import Web3 from 'web3';
-const cultManagerJs = require('../../../artifacts/contracts/CultManager.sol/CultManager.json')
+import { ethers, Signer } from 'ethers';
+const cultManagerJs = require('../../../artifacts/contracts/CultManager.sol/CultManager.json');
+import { CultManager } from '../../../typechain/CultManager';
 const IERC20 = require('./abis/IERC20.abi.json');
-import { ethers, Signer } from "ethers";
 
 export class GlobalService {
     // web3 = new Web3('http://localhost:8545');
@@ -25,29 +25,28 @@ export class GlobalService {
     }
 
     async call(transaction: any) {
-        return await transaction.call({})
+        return await transaction.call({});
     }
 
     async connectMetamask() {
-        if(!window.ethereum || !window.ethereum.isMetaMask) {
-          alert('Please install metamask');
-          return;
-        }
-    
-        this.accounts = await this.provider.send('eth_requestAccounts', []);
-        console.log(this.accounts)
-        this.isConnected = true;
+        if (!window.ethereum || !window.ethereum.isMetaMask) {
+        alert('Please install metamask');
+        return;
     }
 
-    waitForConnect() {
-        return new Promise((resolve, reject) => {
-            let interval = setInterval(()=>{
-                if(this.isConnected) {
-                    clearInterval(interval)
-                    resolve(true)
-                }
-            }, 1000)
-        })
-    }
-    
+    this.accounts = await this.provider.send('eth_requestAccounts', []);
+    console.log(this.accounts);
+    this.isConnected = true;
+  }
+
+  waitForConnect() {
+    return new Promise((resolve, reject) => {
+      const interval = setInterval(() => {
+        if (this.isConnected) {
+          clearInterval(interval);
+          resolve(true);
+        }
+      }, 1000);
+    });
+  }
 }

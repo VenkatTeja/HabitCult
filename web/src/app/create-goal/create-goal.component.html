@@ -1,45 +1,73 @@
-<div class="container-fluid row" style="margin-top: 30px;">
+<div [formGroup]="createGoalForm" class="container-fluid row" style="margin-top: 30px;">
     <div class="col" style="max-width: 25%;">
         <div class="col" style="background-color: #242424; padding: 20px;border-radius: 5px;">
             <h5 style="color: white">Personal Details</h5>
-            <input class="form-control" type="text"
-                style="width: 100%;margin-top: 15px; margin-bottom: 15px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
-                placeholder="Your Name" />
-            <input class="form-control" type="text"
-                style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
-                placeholder="Your wallet address" />
+            <div style="margin-bottom: 15px">
+                <input [ngClass]="{ 'invalid-input': submitted && form.name.errors }" class="form-control" type="text"
+                    formControlName="name"
+                    style="width: 100%;margin-top: 15px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
+                    placeholder="Participant Name" />
+                <span *ngIf="submitted && form && form.name.errors && form.name.errors.required"
+                    class="invalid-feedback">Name is required</span>
+            </div>
+            <div>
+                <input class="form-control" type="text" formControlName="address"
+                    [ngClass]="{ 'invalid-input': submitted && form.address.errors }"
+                    style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
+                    placeholder="Participant wallet address" />
+                <span *ngIf="submitted && form && form.address.errors && form.address.errors.required"
+                    class="invalid-feedback">Address is required</span>
+            </div>
         </div>
         <div class="col"
             style="background-color: #242424; padding: 20px;border-radius: 5px; margin-top: 10px;margin-bottom: 10px;">
             <h5 style="color: white">Goal Setting</h5>
-            <select class="form-select" id="inputGroupSelect01"
-                style="width: 100%;margin-top: 15px;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;">
-                <option selected>Select Category</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-            </select>
-            <input class="form-control" type="text"
-                style="width: 100%;margin-top: 10px; margin-bottom: 10px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
-                placeholder="Goal Name" />
-            <textarea class="form-control" rows="3" type="text"
+            <div>
+                <select class="form-select" [ngClass]="{ 'invalid-input': submitted && form.goalCategory.errors }"
+                    id="inputGroupSelect01" formControlName="goalCategory"
+                    style="width: 100%;margin-top: 15px;line-height: 1.5; background-color: #191919;color: #FFFFFF; border-color: #191919;">
+                    <option disabled selected>Select Category</option>
+                    <option value="book-reading">book-reading</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <span *ngIf="submitted && form && form.goalCategory.errors && form.goalCategory.errors.required"
+                    class="invalid-feedback">Goal Category is required</span>
+            </div>
+            <div style="margin-bottom: 10px;margin-top: 10px;">
+                <input class="form-control" type="text" formControlName="goalName"
+                    [ngClass]="{ 'invalid-input': submitted && form.goalName.errors }"
+                    style="width: 100%; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
+                    placeholder="Goal Name" />
+                <span *ngIf="submitted && form && form.goalName.errors && form.goalName.errors.required"
+                    class="invalid-feedback">Goal Name is required</span>
+            </div>
+            <textarea class="form-control" rows="3" type="text" formControlName="goalDescription"
                 style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919; margin-bottom: 10px;"
                 placeholder="Goal Description"></textarea>
             <div class="input-group mb-3">
                 <span class="input-group-text"
                     style="background-color: #242424;color: #FFFFFF; border-color: #242424; padding-left: 2px;"
                     id="inputGroup-sizing-default">Duration of goal (in weeks)</span>
-                <input type="number" class="form-control" aria-label="Sizing example input"
+                <input type="number" [ngClass]="{ 'invalid-input': submitted && form.durationOfGoal.errors }"
+                    formControlName="durationOfGoal" class="form-control" aria-label="Sizing example input"
                     style="background-color: #191919; color: #FFFFFF; border-color: #191919;"
                     aria-describedby="inputGroup-sizing-default">
+                <span style="padding-left: 2px;"
+                    *ngIf="submitted && form && form.durationOfGoal.errors && form.durationOfGoal.errors.required"
+                    class="invalid-feedback">Duration is required</span>
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="inputGroup-sizing-default"
                     style="background-color: #242424;color: #FFFFFF; border-color: #242424; padding-left: 2px;">Frequency
                     of event</span>
-                <input type="number" class="form-control" aria-label="Sizing example input"
+                <input type="number" [ngClass]="{ 'invalid-input': submitted && form.frequency.errors }"
+                    class="form-control" aria-label="Sizing example input" formControlName="frequency"
                     style="background-color: #191919; color: #FFFFFF; border-color: #191919;"
                     aria-describedby="inputGroup-sizing-default">
+                <span style="padding-left: 2px;"
+                    *ngIf="submitted && form && form.frequency.errors && form.frequency.errors.required"
+                    class="invalid-feedback">Frequency is required</span>
             </div>
         </div>
         <div class="col"
@@ -48,9 +76,13 @@
                 <span class="input-group-text" id="inputGroup-sizing-default"
                     style="background-color: #242424;color: #FFFFFF; border-color: #242424; padding-left: 2px;">Staking
                     Amount</span>
-                <input type="number" min="1" max="1000" class="form-control" aria-label="Sizing example input"
+                <input [(ngModel)]="betAmount" type="number" min="1" max="1000" (change)="checkTokenAllowance()" class="form-control" aria-label="Sizing example input"
+                    formControlName="betAmount" [ngClass]="{ 'invalid-input': submitted && form.betAmount.errors }"
                     style="background-color: #191919; color: #FFFFFF; border-color: #191919;"
                     aria-describedby="inputGroup-sizing-default">
+                <span style="padding-left: 2px;"
+                    *ngIf="submitted && form && form.betAmount.errors && form.betAmount.errors.required"
+                    class="invalid-feedback">Staking Amount is required</span>
             </div>
         </div>
     </div>
@@ -58,42 +90,42 @@
         <div class="col" style="background-color: #242424; padding: 20px;border-radius: 5px; height: 100%;">
             <h5 style="color: white">Validator Details</h5>
             <div class="mb-3">
-                <input class="form-control" type="text"
+                <input class="form-control" type="text" formControlName="validatorName1"
                     style="width: 100%;margin-top: 20px; margin-bottom: 10px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #1 Name" />
-                <input class="form-control" type="text"
+                <input class="form-control" formControlName="validatorAddress1" type="text"
                     style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #1 address" />
             </div>
             <div class="mb-3">
-                <input class="form-control" type="text"
+                <input formControlName="validatorName2" class="form-control" type="text"
                     style="width: 100%;margin-top: 20px; margin-bottom: 10px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #2 Name" />
-                <input class="form-control" type="text"
+                <input formControlName="validatorAddress2" class="form-control" type="text"
                     style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #2 address" />
             </div>
             <div class="mb-3">
-                <input class="form-control" type="text"
+                <input class="form-control" formControlName="validatorName3" type="text"
                     style="width: 100%;margin-top: 20px; margin-bottom: 10px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #3 Name" />
-                <input class="form-control" type="text"
+                <input formControlName="validatorAddress3" class="form-control" type="text"
                     style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #3 address" />
             </div>
             <div class="mb-3">
-                <input class="form-control" type="text"
+                <input class="form-control" formControlName="validatorName4" type="text"
                     style="width: 100%;margin-top: 20px; margin-bottom: 10px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #4 Name" />
-                <input class="form-control" type="text"
+                <input formControlName="validatorAddress4" class="form-control" type="text"
                     style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #4 address" />
             </div>
             <div class="mb-3">
-                <input class="form-control" type="text"
+                <input class="form-control" formControlName="validatorName5" type="text"
                     style="width: 100%;margin-top: 20px; margin-bottom: 10px; line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #5 Name" />
-                <input class="form-control" type="text"
+                <input formControlName="validatorAddress5" class="form-control" type="text"
                     style="width: 100%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                     placeholder="Validator #5 address" />
             </div>
@@ -101,7 +133,10 @@
     </div>
     <div class="col text-center" style="max-width: 45%;">
         <div class="col" style="padding: 20px; color: #FFFFFF;">
-            <button type="button" style="width: 60%;" class="btn btn-primary">CREATE GOAL</button>
+            <button type="submit" style="width: 60%;" class="btn btn-primary" (click)="createGoal()"
+                *ngIf="isTokenAllowed">CREATE GOAL</button>
+            <button type="submit" style="width: 60%;" class="btn btn-primary" (click)="approveToken()"
+                *ngIf="!isTokenAllowed">Approve USDT</button>
         </div>
         <h6 class="text-white" style="opacity: 0.5; font-weight: bold;">HOW IT WORKS</h6>
         <div class="col"

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -17,6 +16,7 @@ import { UpcomingTasksComponent } from './goal-progress/upcoming-tasks/upcoming-
 import { HistoryComponent } from './goal-progress/history/history.component';
 import { ContractService } from './services/contract.service';
 import { MetamaskMissingComponent } from './metamask-missing/metamask-missing.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -37,6 +37,8 @@ import { MetamaskMissingComponent } from './metamask-missing/metamask-missing.co
     BrowserAnimationsModule,
     MatIconModule,
     MatButtonModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [GlobalService, ContractService],
   bootstrap: [AppComponent],
