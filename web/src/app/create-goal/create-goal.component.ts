@@ -13,6 +13,12 @@ export class CreateGoalComponent implements OnInit {
 
   constructor(private globalService: GlobalService) { }
 
+  async checkHash() {
+    let hash = "0x25f73b12a8846380999720490beba33b4b11aeb7b77fd6474b78670e0cd91e16"
+    let tx = await this.globalService.provider.getTransactionReceipt(hash)
+    console.log(tx)
+  }
+
   async checkTokenAllowance() {
     await this.globalService.waitForConnect()
     let allowance: BigNumber[] = await this.globalService.TokenContract.functions.allowance(await this.globalService.signer.getAddress(), this.globalService.CultManagerAddress);
@@ -26,6 +32,7 @@ export class CreateGoalComponent implements OnInit {
     await this.globalService.waitForConnect()
     let approve = await this.globalService.TokenContract.connect(this.globalService.signer).functions.approve(this.globalService.CultManagerAddress, '10000000')
     console.log(approve)
+    await approve.wait()
   }
 
   async createGoal() {
@@ -36,10 +43,19 @@ export class CreateGoalComponent implements OnInit {
 
     let addGoal = await this.globalService.CultManagerContract.connect(this.globalService.signer).functions.addGoal(name, objectiveInWords, category, participant, [], period, eventsPerPeriod, nPeriods, targetType, betAmount)
     console.log(addGoal)
+    await addGoal.wait()
+  }
+
+  async test() {
+    // this.checkHash()
+    await this.checkTokenAllowance()
+    await this.approveToken()
+    // await this.createGoal()
   }
 
   ngOnInit(): void {
-    this.checkTokenAllowance()
+    // this.checkTokenAllowance()
+    this.test()
   }
 
 }

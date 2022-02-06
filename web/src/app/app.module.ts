@@ -15,7 +15,7 @@ import { EndOfGoalComponent } from './end-of-goal/end-of-goal.component';
 import { GlobalService } from './global.service';
 import { UpcomingTasksComponent } from './goal-progress/upcoming-tasks/upcoming-tasks.component';
 import { HistoryComponent } from './goal-progress/history/history.component';
-// import { ContractService } from './services/contract.service';
+import { ContractService } from './services/contract.service';
 import { MetamaskMissingComponent } from './metamask-missing/metamask-missing.component';
 
 @NgModule({
@@ -38,7 +38,7 @@ import { MetamaskMissingComponent } from './metamask-missing/metamask-missing.co
     MatIconModule,
     MatButtonModule,
   ],
-  providers: [GlobalService],
+  providers: [GlobalService, ContractService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

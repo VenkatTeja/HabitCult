@@ -7,17 +7,20 @@ import { ethers, Signer } from "ethers";
 export class GlobalService {
     // web3 = new Web3('http://localhost:8545');
     provider = new ethers.providers.Web3Provider(window.ethereum);
-    CultManagerAddress = "0xfC47d03bd4C8a7E62A62f29000ceBa4D84142343"
+    CultManagerAddress = "0xa7480B62a657555f6727bCdb96953bCC211FFbaC"
     StakeCoin = "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"
-
+    
     signer = this.provider.getSigner();
     CultManagerABI: any = cultManagerJs.abi;
 
+    TokenDecimals = 6;
     TokenContract = new ethers.Contract(this.StakeCoin, IERC20.abi, this.provider);
     CultManagerContract = new ethers.Contract(this.CultManagerAddress, cultManagerJs.abi, this.provider);
     public accounts: string[] = []
     isConnected = false;
     constructor() {
+        console.log('token abi', IERC20.abi)
+        console.log('cult abi', cultManagerJs.abi)
         this.connectMetamask()
     }
 
@@ -46,4 +49,5 @@ export class GlobalService {
             }, 1000)
         })
     }
+    
 }
