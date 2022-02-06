@@ -4,6 +4,8 @@ import * as myLib from './lib'
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { Staker } from "../typechain";
 import * as BeefyAbi from './abis/beefy.abi.json'
+import * as routerABI from './abis/router.abi.json';
+import * as pairABI from './abis/pair.abi.json';
 
 const Web3 = require('web3');
 
@@ -11,7 +13,7 @@ const web3 = new Web3("http://localhost:8545");
 
 describe("Staker", function () {
     let owner: SignerWithAddress, addr1: SignerWithAddress;
-    let token = myLib.TOKENS.DAI
+    let token = myLib.TOKENS.USDT
     let staker: Staker
 
     const init = async () => {
@@ -40,8 +42,11 @@ describe("Staker", function () {
 
     it("Should stake", async function () {
         // Initiating beefy contract to test
-        let beefyAddr = "0x9B36ECeaC46B70ACfB7C2D6F3FD51aEa87C31018"
-        let beefyContract = new web3.eth.Contract(BeefyAbi.abi, beefyAddr);
+        let beefyAddr = "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506"
+        let pair = "0x3B31Bb4b6bA4f67F4EF54e78bCb0AAa4f53DC7fF";
+
+        let beefyContract = new web3.eth.Contract(routerABI.abi, beefyAddr);
+        let pairContract = new web3.eth.Contract(pairABI.abi, pair);
         let stakeAmount = web3.utils.toWei(web3.utils.toBN(20)).toString()
         console.log({stakeAmount})
         
@@ -50,12 +55,17 @@ describe("Staker", function () {
         console.log({balanceOnBeefy})
         
         // Call stake method
+        let liquidity = await staker.callStatic.stake(stakeAmount)
+        console.log(liquidity)
+
         let tx = await staker.stake(stakeAmount)
         await tx.wait();
 
+        let balance = web3.utils.fromWei(await myLib.call(pairContract.methods.balanceOf(staker.address)))
+        console.log({balance})
         // Check balance later
-        balanceOnBeefy = web3.utils.fromWei(await myLib.call(beefyContract.methods.balanceOf(staker.address)))
-        console.log({balanceOnBeefy})
-        expect(balanceOnBeefy == '18.868943752399129082', 'Beefy balance not as expected')
+        // balanceOnBeefy = web3.utils.fromWei(await myLib.call(beefyContract.methods.balanceOf(staker.address)))
+        // console.log({balanceOnBeefy})
+        // expect(balanceOnBeefy == '18.868943752399129082', 'Beefy balance not as expected')
     })
 })
