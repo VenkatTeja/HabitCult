@@ -32,7 +32,7 @@ export class ValidationPortalComponent implements OnInit {
         try {
           let currentBlk = await this.globalService.GoalManagerContract.functions.currentBlockToLog(goalIDs[0][i])
           console.log({currentBlk})
-          let vote = await this.globalService.CultManagerABI.functions.getLoggedEvents(goalIDs[0][i], goal.participant.addr, currentBlk)
+          let vote = await this.globalService.GoalManagerContract.functions.getLoggedEvents(goalIDs[0][i], goal.participant.addr, currentBlk)
           console.log({vote})
         } catch(err) {
           this.loader.loaderEnd()
