@@ -49,15 +49,15 @@
                         <span style="font-size: small;">Status</span>
                         <div style="display: flex;" *ngIf="targetStatus <= 2 && targetStatus > 0">
                             <h4>{{getGoalStatusWordings(targetStatus)}}</h4>
-                            <mat-icon style="color: orange;">local_fire_department</mat-icon>
+                            <mat-icon style="color: orange; margin-left: 5px;">local_fire_department</mat-icon>
                         </div>
                         <div style="display: flex;" *ngIf="!targetStatus">
                             <h4>You can catch up!</h4>
-                            <mat-icon style="color: red;">trending_down</mat-icon>
+                            <mat-icon style="color: red; margin-left: 5px;">trending_down</mat-icon>
                         </div>
                         <div style="display: flex;" *ngIf="targetStatus > 2">
                             <h4>{{getGoalStatusWordings(targetStatus)}}</h4>
-                            <mat-icon style="color: red;">trending_down</mat-icon>
+                            <mat-icon style="color: red; margin-left: 5px;">trending_down</mat-icon>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { GlobalService } from 'src/app/global.service';
 import { LoadingService } from 'src/app/loader.service';
 import { ContractService } from 'src/app/services/contract.service';
@@ -15,7 +16,7 @@ export class UpcomingTasksComponent implements OnInit {
   currentWeek = 0
   validators: any
   frequency: number = 0
-  constructor(private contractService: ContractService, private loader: LoadingService) {
+  constructor(private contractService: ContractService, private loader: LoadingService, private router: Router) {
     let url = location.href.split('/')
     this.goalId = Number(url[url.length - 1])
   }
@@ -52,9 +53,12 @@ export class UpcomingTasksComponent implements OnInit {
   async submitFrequency() {
     try {
       this.loader.loaderStart()
-      const res = await this.contractService.logActivity(this.goalId, this.frequency)
-      console.log('after freq submit', res);
-      
+      await this.contractService.logActivity(this.goalId, this.frequency)
+      const {result} = await this.contractService.getGoalDetails(this.goalId)
+      console.log({result})
+      if (result[0] && result[0].isPass) {
+        this.router.navigate([`end-of-goal/${this.goalId}`])
+      }
       this.loader.loaderEnd()
     } catch(err) {
       this.loader.loaderEnd()

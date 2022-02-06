@@ -44,7 +44,7 @@ export class HistoryComponent implements OnInit {
             validationStatus: status || false
           })
         }
-        v.length && this.history.push(v)
+        this.history.push(v)
       }
     }
     console.log(this.history);

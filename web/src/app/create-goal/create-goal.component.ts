@@ -147,8 +147,9 @@ export class CreateGoalComponent implements OnInit {
       } else {
         this.loader.loaderEnd()
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err)
+      alert(err.data.message)
       this.loader.loaderEnd()
     }
   }
