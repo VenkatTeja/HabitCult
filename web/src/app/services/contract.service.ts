@@ -38,6 +38,7 @@ export class ContractService {
     async getGoalsToValidate() {
         this.globalService.waitForConnect();
         let goalIDs = await this.globalService.CultManagerContract.functions.getGoalsToValidate(await this.globalService.signer.getAddress())
+        return goalIDs;
     }
 
     async getGoalDetails(id: number) {

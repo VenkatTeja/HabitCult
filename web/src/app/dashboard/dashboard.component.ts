@@ -10,6 +10,11 @@ import { GlobalService } from '../global.service';
 export class DashboardComponent implements OnInit {
   constructor(private router: Router, private globalService: GlobalService) { }
   goals: any = [];
+  money = {
+    total: 1000,
+    locked: 1000,
+    rewards: 5
+  }
   ngOnInit(): void {
     this.refreshGoals();
   }
@@ -23,6 +28,7 @@ export class DashboardComponent implements OnInit {
       );
     for (let i = 0; i < goalIDs[0].length; i++) {
       let goal = await this.globalService.CultManagerContract.functions.getGoalByID(goalIDs[0][i])
+      console.log(goal)
       this.goals.push(goal)
     }
   }

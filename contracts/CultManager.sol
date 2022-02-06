@@ -354,6 +354,12 @@ contract CultManager is Ownable {
         return true;
     }
 
+    function getLoggedEvents(uint256 goalID, address by, uint256 periodEndBlock) public view returns (CultMath.Vote memory) {
+        CultMath.Goal storage goal = nftGoalMap[goalID];
+        mapping(uint256 => CultMath.Vote) storage votes = goal.eventsRegisteredPerPeriodMapping[msg.sender].periodVoteMapping;
+        return votes[periodEndBlock];
+    }
+
     function logActivity(uint256 goalID, uint64 events) external returns (bool) {
         validateGoalAccess(goalID);
         require(events >= 0, "Events should be >= 0");
