@@ -35,8 +35,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getColors(i: number) {
-    let j = i%3
-    return ['#558CFF', '#93FFD8', '#ECDBBA'][j]
+    let j = i%5
+    return ['#558CFF', '#93FFD8', '#ECDBBA', '#F37171', '#7C33EB'][j]
   }
 
   async refreshGoals() {
