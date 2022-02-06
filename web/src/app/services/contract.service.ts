@@ -71,11 +71,14 @@ export class ContractService {
 
     async getCategories() {
         let categoryIndexes = await this.globalService.CultManagerContract.functions.getCategoryIndexes();
+        console.log({categoryIndexes})
         let categories: any[] = []
-        for (let i = 0; i < categoryIndexes.length; ++i) {
-            let cat = await this.globalService.CultManagerContract.functions.getCategory(categoryIndexes[i])
-            categories.push(cat)
+        for (let i = 0; i < categoryIndexes[0].length; ++i) {
+            let cat = await this.globalService.CultManagerContract.functions.getCategory(categoryIndexes[0][i])
+            console.log({cat: cat[0]})
+            categories.push({id: categoryIndexes[0][i], ...cat[0]})
         }
+        console.log({categories})
         return categories;
     }
 

@@ -4,6 +4,7 @@ import { BigNumber, ethers, Signer } from "ethers";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingService } from '../loader.service';
 import { Router } from '@angular/router';
+import { ContractService } from '../services/contract.service';
 
 export interface User {
   addr: string;
@@ -19,13 +20,15 @@ export class CreateGoalComponent implements OnInit {
   isTokenAllowed = false;
   public createGoalForm!: FormGroup;
   submitted = false
+  categories: any[] = []
 
-  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private loader: LoadingService, private router: Router) { }
+  constructor(private globalService: GlobalService, private contractService: ContractService, private formBuilder: FormBuilder, private loader: LoadingService, private router: Router) { }
   get form() { return this.createGoalForm.controls; }
 
   ngOnInit(): void {
     this.checkTokenAllowance()
     this.reset()
+    this.getCategories()
   }
 
   async reset() {
@@ -52,6 +55,9 @@ export class CreateGoalComponent implements OnInit {
     });
   }
 
+  async getCategories() {
+    this.categories = await this.contractService.getCategories()
+  }
   async checkHash() {
     let hash = "0x25f73b12a8846380999720490beba33b4b11aeb7b77fd6474b78670e0cd91e16"
     let tx = await this.globalService.provider.getTransactionReceipt(hash)
@@ -93,7 +99,7 @@ export class CreateGoalComponent implements OnInit {
         this.loader.loaderStart()
         await this.globalService.waitForConnect()
         let inWei = ethers.utils.parseUnits(this.betAmount.toString(), this.globalService.TokenDecimals).toString()
-        let approve = await this.globalService.TokenContract.connect(this.globalService.signer).functions.approve(this.globalService.CultManagerAddress, inWei)
+        let approve = await this.globalService.TokenContract.connect(this.globalService.signer).functions.approve(this.globalService.GoalManagerAddress, inWei) 
         console.log(approve)
         await approve.wait(2)
         console.log('token approved')
@@ -130,7 +136,7 @@ export class CreateGoalComponent implements OnInit {
           addr: this.createGoalForm.value.address || await this.globalService.signer.getAddress(),
           nick: this.createGoalForm.value.name
         }
-        const period = 30, eventsPerPeriod = this.createGoalForm.value.frequency, nPeriods = this.createGoalForm.value.durationOfGoal, targetType = Number(this.createGoalForm.value.targetType), betAmount = inWei;
+        const period = 90, eventsPerPeriod = this.createGoalForm.value.frequency, nPeriods = this.createGoalForm.value.durationOfGoal, targetType = Number(this.createGoalForm.value.targetType), betAmount = inWei;
   
         let validators: User[] = []
         validators = this.parseValidator(validators, 1)

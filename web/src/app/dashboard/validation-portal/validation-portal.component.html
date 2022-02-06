@@ -7,15 +7,18 @@
             <div class="row align-items-center">
                 <div class="col">
                     <h6 class="card-title">{{user.participant}}</h6>
-                    <h6 class="align-middle" style="color: grey;">{{user.goalName}} | {{user.goalFrequency}} / week</h6>
+                    <h6 class="align-middle" style="color: grey;">{{user.goalName}} | {{user.goalFrequency}} / week | #{{user.period}}</h6>
                 </div>
                 <div class="col text-end" *ngIf="!user.vote.voted">
                     Wait till participant logs
                 </div>
-                <div class="col text-end" *ngIf="user.vote.voted">
+                <div class="col text-end" *ngIf="user.vote.voted && !user.myVote.voted">
                     <span class="badge bg-secondary" style="background-color: #104D76 !important; width: 40%; line-height: 2;">{{user.vote.events}} / week</span>
-                    <button mat-icon-button><mat-icon style="color: #F37171">cancel</mat-icon></button>
-                    <button mat-icon-button><mat-icon style="color: #62A85D">check_circle</mat-icon></button>
+                    <button mat-icon-button><mat-icon style="color: #F37171" (click)="submitFrequency(user.goalID, user.goalFrequency, user.targetType, false)">cancel</mat-icon></button>
+                    <button mat-icon-button><mat-icon style="color: #62A85D" (click)="submitFrequency(user.goalID, user.goalFrequency, user.targetType, true)">check_circle</mat-icon></button>
+                </div>
+                <div class="col text-end" *ngIf="user.vote.voted && user.myVote.voted">
+                    Already validated
                 </div>
             </div>
         </div>

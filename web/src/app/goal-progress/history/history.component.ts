@@ -38,13 +38,16 @@ export class HistoryComponent implements OnInit {
       if (res1 > block) {
         let v = []
         for (let j = 0; j< this.validators.length; j++) {
-          let status = await this.getValidatorStatus(this.goalId, this.validators[j].addr, <number> res1)
+          let status = await this.getValidatorStatus(this.goalId, this.validators[j].addr, <number> block)
           v.push({
             name: this.validators[j].nick,
-            validationStatus: status || false
+            validationStatus: status || false,
           })
         }
-        this.history.push(v)
+        let voteArr = await this.globalService.GoalManagerContract.functions.getLoggedEvents(this.goalId, this.globalService.accounts[0], block)
+        let voteCurrentWeek = voteArr[0]
+
+        this.history.push({period: block, validators: v, vote: voteCurrentWeek})
       }
     }
     console.log(this.history);
@@ -60,10 +63,10 @@ export class HistoryComponent implements OnInit {
   }
   
   async getValidatorStatus(id: number, addr: string, currentBlk: number) {
-    console.log({id, addr, currentBlk})
+    console.log('getValidatorStatus', {id, addr, currentBlk})
     let vote = await this.globalService.GoalManagerContract.functions.getLoggedEvents(id, addr, BigInt(currentBlk))
-    console.log(vote);    
-    return vote.status
+    console.log('getValidatorStatus2', vote[0]);    
+    return vote[0].voted
   }
 
 }

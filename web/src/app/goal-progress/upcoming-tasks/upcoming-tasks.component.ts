@@ -14,9 +14,10 @@ export class UpcomingTasksComponent implements OnInit {
   goalId: any
   upcomingTasks: Array<any> = []
   currentWeek = 0
+  voteCurrentWeek = {events: 0, voted: false}
   validators: any
   frequency: number = 0
-  constructor(private contractService: ContractService, private loader: LoadingService, private router: Router) {
+  constructor(private contractService: ContractService, private globalService: GlobalService, private loader: LoadingService, private router: Router) {
     let url = location.href.split('/')
     this.goalId = Number(url[url.length - 1])
   }
@@ -27,27 +28,36 @@ export class UpcomingTasksComponent implements OnInit {
     if (res.length && res[0] && res[0].length) {
       res = res[0].map((a: any) => Number(a))
     }
-    console.log(res);
+    console.log({period2: res});
     let res1
     try {
       res1 = Number(await this.contractService.getCurrentBlockToLog(this.goalId))
       console.log(Number(res1));
     } catch(err) {
-      this.upcomingTasks = res.map((i:number, index:number) => index+1);
+      let upcomingTasks = res.map((i:number, index:number) => index+1);
+      for(let i=0; i<upcomingTasks.length; ++i) {
+        this.upcomingTasks.push({index: upcomingTasks[i], period: res[i]})
+      }
       return;
     }
     for (let i = 1; i<res.length+1;i++) {
       let block = res[i-1]
       if (res1 <= block) {
         if (this.currentWeek) {
-          this.upcomingTasks.push(i)
+          this.upcomingTasks.push({index: i, period: block})
         } else {
           this.currentWeek = i
+          let voteArr = await this.globalService.GoalManagerContract.functions.getLoggedEvents(this.goalId, this.globalService.accounts[0], block)
+          this.voteCurrentWeek = voteArr[0]
         }
       }
     }
     console.log(this.upcomingTasks);
     
+  }
+
+  async hasUserLogged(id: number) {
+    let vote = await this.globalService.GoalManagerContract.functions.getLoggedEvents(id, this.globalService.accounts[0], 0)
   }
 
   async submitFrequency() {
@@ -63,6 +73,7 @@ export class UpcomingTasksComponent implements OnInit {
     } catch(err) {
       this.loader.loaderEnd()
     }
+    window.location.reload()
   }
 
   async getGoalDetails(id: number) {

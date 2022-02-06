@@ -3,5 +3,6 @@
     style="height: 80px; padding: 30px; margin-top: 10px; background-color: #191919; border-radius: 10px; display: flex; align-items: center;">
     <mat-icon style="color: #5D5D5D; font-size: 15px; align-self: baseline;">circle</mat-icon>
     <h4 style="margin-bottom: 0px; margin-right: 20px;">Week {{i+1}}</h4>
-    <span *ngFor="let validator of week" [ngClass]="{'badge rounded-pill bg-success': validator.validationStatus, 'badge rounded-pill bg-danger': !validator.validationStatus}" style="margin-left: 5px; margin-right: 5px;">{{validator.name}}</span>
+    <span style="margin-right: 10px;">#{{week.period}}</span> | <span *ngIf="week.vote.voted" style="margin-left: 10px;">Logged activity: {{week.vote.events}}</span><span *ngIf="!week.vote.voted" style="margin-left: 10px;">Missing logging activity</span>
+    <span *ngFor="let validator of week.validators" [ngClass]="{'badge rounded-pill bg-success': validator.validationStatus, 'badge rounded-pill bg-danger': !validator.validationStatus}" style="margin-left: 10px; margin-right: 5px;">{{validator.name}}</span>
 </div>
