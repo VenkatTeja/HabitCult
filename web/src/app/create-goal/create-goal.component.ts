@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GlobalService } from '../global.service';
 import { BigNumber, ethers, Signer } from "ethers";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LoadingService } from '../loader.service';
 
 export interface User {
   addr: string;
@@ -18,7 +19,7 @@ export class CreateGoalComponent implements OnInit {
   public createGoalForm!: FormGroup;
   submitted = false
 
-  constructor(private globalService: GlobalService, private formBuilder: FormBuilder) { }
+  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private loader: LoadingService) { }
   get form() { return this.createGoalForm.controls; }
 
   ngOnInit(): void {
@@ -50,19 +51,26 @@ export class CreateGoalComponent implements OnInit {
   }
 
   async checkTokenAllowance() {
-    await this.globalService.waitForConnect()
-
-    // Check if token is already allowed
-    let allowance: BigNumber[] = await this.globalService.TokenContract.functions.allowance(await this.globalService.signer.getAddress(), this.globalService.CultManagerAddress);
-
-    let inWei = ethers.utils.parseUnits(this.betAmount.toString(), this.globalService.TokenDecimals)
-    let weiToEther = ethers.utils.formatUnits(inWei, this.globalService.TokenDecimals)
-    console.log({ betAmount: this.betAmount.toString(), inWei: inWei.toString(), weiToEther, allownace: allowance[0].toNumber() })
-    if (allowance.length > 0 && allowance[0].gte(inWei)) {
-      this.isTokenAllowed = true;
-      console.log('token allowed')
-    } else {
-      this.isTokenAllowed = false
+    try {
+      this.loader.loaderStart()
+      await this.globalService.waitForConnect()
+  
+      // Check if token is already allowed
+      let allowance: BigNumber[] = await this.globalService.TokenContract.functions.allowance(await this.globalService.signer.getAddress(), this.globalService.CultManagerAddress);
+  
+      let inWei = ethers.utils.parseUnits(this.betAmount.toString(), this.globalService.TokenDecimals)
+      let weiToEther = ethers.utils.formatUnits(inWei, this.globalService.TokenDecimals)
+      console.log({ betAmount: this.betAmount.toString(), inWei: inWei.toString(), weiToEther, allownace: allowance[0].toNumber() })
+      if (allowance.length > 0 && allowance[0].gte(inWei)) {
+        this.isTokenAllowed = true;
+        console.log('token allowed')
+      } else {
+        this.isTokenAllowed = false
+      }
+      this.loader.loaderEnd()
+    } catch (err) {
+      console.error(err)
+      this.loader.loaderEnd()
     }
   }
 
@@ -70,6 +78,7 @@ export class CreateGoalComponent implements OnInit {
     try {
       this.submitted = true;
       if (this.createGoalForm.valid) {
+        this.loader.loaderStart()
         await this.globalService.waitForConnect()
         let inWei = ethers.utils.parseUnits(this.betAmount.toString(), this.globalService.TokenDecimals).toString()
         let approve = await this.globalService.TokenContract.connect(this.globalService.signer).functions.approve(this.globalService.CultManagerAddress, inWei)
@@ -77,10 +86,12 @@ export class CreateGoalComponent implements OnInit {
         await approve.wait(2)
         console.log('token approved')
         this.isTokenAllowed = true;
+        this.loader.loaderEnd()
       } else {
         alert('Form is invalid')
       }
     } catch (err) {
+      this.loader.loaderEnd()
       console.warn(err)
     }
   }
@@ -88,6 +99,7 @@ export class CreateGoalComponent implements OnInit {
   async createGoal() {
     this.submitted = true;
     if (this.createGoalForm.valid) {
+      this.loader.loaderStart()
       await this.globalService.waitForConnect()
       console.log({ addr: await this.globalService.signer.getAddress() })
       let inWei = ethers.utils.parseUnits(this.betAmount.toString(), this.globalService.TokenDecimals).toString()
@@ -100,10 +112,33 @@ export class CreateGoalComponent implements OnInit {
       }
       const period = 302400, eventsPerPeriod = 2, nPeriods = 2, targetType = 0, betAmount = inWei;
 
-      let validators: User[] = []
-      let addGoal = await this.globalService.CultManagerContract.connect(this.globalService.signer).functions.addGoal(name, objectiveInWords, category, participant, [], period, eventsPerPeriod, nPeriods, targetType, betAmount)
+      let validators: User[] = [
+        {
+          nick: this.createGoalForm.value.validatorName1,
+          addr: this.createGoalForm.value.validatorAddress1,
+        },
+        {
+          nick: this.createGoalForm.value.validatorName2,
+          addr: this.createGoalForm.value.validatorAddress2,
+        },
+        {
+          nick: this.createGoalForm.value.validatorName3,
+          addr: this.createGoalForm.value.validatorAddress3,
+        },
+        {
+          nick: this.createGoalForm.value.validatorName4,
+          addr: this.createGoalForm.value.validatorAddress4,
+        },
+        {
+          nick: this.createGoalForm.value.validatorName5,
+          addr: this.createGoalForm.value.validatorAddress5,
+        },
+      ]
+      let addGoal = await this.globalService.CultManagerContract.connect(this.globalService.signer).functions.addGoal(name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount)
       console.log(addGoal)
+      this.loader.loaderEnd()
     } else {
+      this.loader.loaderEnd()
       alert('Form is invalid')
     }
   }

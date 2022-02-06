@@ -23,3 +23,18 @@ body { margin: 0; font-family: "Rubik", "Helvetica Neue", sans-serif; }
     font-size: smaller;
     color: red;
 }
+
+.global-loader {
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    position: fixed;
+    z-index: 99999;
+    background: #fdfcfc82;
+}
+
+.global-loader .overlay {
+    position: absolute;
+    top: calc(50% - 50px);
+    left: calc(50% - 100px);
+}
