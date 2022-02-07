@@ -21,6 +21,7 @@ export class ValidationPortalComponent implements OnInit {
   constructor(private globalService: GlobalService, private contractService: ContractService, private loader: LoadingService, private router: Router) { }
 
   async refresh() {
+    await this.globalService.waitForConnect()
     try {
       this.loader.loaderStart()
       let goalIDs = await this.contractService.getGoalsToValidate()

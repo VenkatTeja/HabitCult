@@ -1,9 +1,9 @@
-<nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark" style="background-color: #242424;">
+<nav class="navbar navbar-expand-lg sticky-top navbar-dark" style="background-color: #000000;">
     <div class="container-fluid">
         <div class="container-lg">
-            <a class="navbar-brand" href="/dashboard">
-                <img src="./assets/images/habitscult-logo.png" width="40" height="40">
-                habitcult
+            <a class="navbar-brand" href="/dashboard" style="margin-left: 10px;">
+                <img src="./assets/images/habitscult-logo2.png" width="140" height="40">
+                <!-- habitcult -->
             </a>
         </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
@@ -15,23 +15,23 @@
                 <li class="nav-item">
                     <a class="nav-link" style="font-size: 14px; margin-right: 20px;" href="/dashboard">Dashboard</a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link disabled" style="font-size: 14px; margin-right: 20px;">Roadmap</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link disabled" style="font-size: 14px; margin-right: 20px;">Economics</a>
-                </li>
+                </li> -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle disabled" style="font-size: 14px; border: 1px solid grey; margin-right: 20px; border-radius: 5px; padding: 5px" href="#" id="navbarDropdownMenuLink" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="./assets/images/polygon.png" width="20" height="20" style="margin-right: 5px;margin-bottom: 2px;">
-                        Polygon
+                        Polygon Mumbai
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <!-- <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" href="#">Binance</a></li>
                         <li><a class="dropdown-item" href="#">Etheruem</a></li>
                         <li><a class="dropdown-item" href="#">Hathor</a></li>
-                    </ul>
+                    </ul> -->
                 </li>
                 <li class="nav-item">
                     <button class="btn btn-outline-primary" style="font-size: 14px;" type="submit" (click)="connectMetamask()" *ngIf="globalService.accounts.length==0">CONNECT</button>

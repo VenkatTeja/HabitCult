@@ -6,11 +6,8 @@
 import { ethers } from "hardhat";
 import * as myLib from '../test/lib';
 import Web3 from 'web3'
-import * as dotenv from "dotenv";
-dotenv.config();
 
-let url: any = process.env.ROPSTEN_URL
-const web3 = new Web3(url);
+const web3 = new Web3("http://localhost:8545");
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -22,8 +19,9 @@ async function main() {
 
   // We get the contract to deploy
   const result = await ethers.getSigners();
-  let user = result[0]
-  console.log(user.address)
+  let owner = result[0]
+  let user = result[1]
+
   const Staker = await ethers.getContractFactory("Staker");
   const staker = await Staker.deploy();
 
@@ -36,7 +34,7 @@ async function main() {
   const cultManager = await CultManager.deploy(goalManager.address);
 
   const GoalNFT = await ethers.getContractFactory("GoalNFT");
-  const goalNFT = await GoalNFT.deploy("https://gateway.pinata.cloud/ipfs/");
+  const goalNFT = await GoalNFT.deploy("http://localhost:3000/nft/");
 
   console.log("Mining...")
   await staker.deployed();
@@ -50,19 +48,19 @@ async function main() {
   console.log("Staking Contract deployed to:", staker.address);
   console.log('\n=============================')
 
-  let setParent = await goalManager.connect(user).setParent(cultManager.address);
+  let setParent = await goalManager.connect(owner).setParent(cultManager.address);
   await setParent.wait()
 
   let transfer = await goalNFT.transferOwnership(cultManager.address)
   await transfer.wait()
-  console.log('ownership set')
+  console.log('Permissions updated')
 
   // FILL user wallet with USDT
   let balBefore = myLib.getEtherNumber(web3, await myLib.getTokenBalance(web3, token.addr, user.address), token.decimals)
-  await myLib.swapEthForTokens(web3, '100', token.addr, user, user.address, myLib.TOKENS.MATIC_TESTNET.addr)
-  let tokenBal = await myLib.getTokenBalance(web3, token.addr, user.address)
-  let newBal = myLib.getEtherNumber(web3, tokenBal, token.decimals)
-  if(parseFloat(newBal) > 0) {
+  console.log({balBefore})
+  await myLib.swapEthForTokens(web3, '100000', token.addr, user, user.address, myLib.TOKENS.MATIC_TESTNET.addr)
+  let newBal = myLib.getEtherNumber(web3, await myLib.getTokenBalance(web3, token.addr, user.address), token.decimals)
+  if(parseFloat(newBal) > 10) {
     console.log(`USDT token address: ${token.addr}`)
     console.log(`USDT balance of ${user.address}: ${newBal}`)
   }
@@ -88,7 +86,7 @@ async function main() {
   await setNFT.wait();
 
   // approve token
-  await myLib.approveToken(web3, token.addr, goalManager.address, tokenBal, user)
+  await myLib.approveToken(web3, token.addr, goalManager.address, '20000000', user)
   console.log('Token approved')
 
   // Add goal
@@ -99,15 +97,15 @@ async function main() {
   await addGoal.wait()
   console.log('goal 1 added')
 
-  // addGoal = await cultManager.connect(user).addGoal('Get Fit', 'Workout at least 3 hours a week', 'fitness', 
-  //   {addr: user.address, nick: 'nick'}, [], period, 2, 2, targetType, '1000000')
-  // await addGoal.wait()
+  addGoal = await cultManager.connect(user).addGoal('Get Fit', 'Workout at least 3 hours a week', 'fitness', 
+    {addr: user.address, nick: 'nick'}, [{addr: owner.address, nick: 'nick'}], period, 2, 2, targetType, '1000000')
+  await addGoal.wait()
 
-  // // add goal as validator
-  // addGoal = await cultManager.connect(user).addGoal('Get Fit', 'Workout at least 3 hours a week', 'fitness', 
-  //   {addr: owner.address, nick: 'nick'}, [{addr: user.address, nick: 'nick'}], period, 2, 2, targetType, '1000000')
-  // await addGoal.wait()
-  // console.log('goal 2 added')
+  // add goal as validator
+  addGoal = await cultManager.connect(user).addGoal('Get Fit', 'Workout at least 3 hours a week', 'fitness', 
+    {addr: owner.address, nick: 'nick'}, [{addr: user.address, nick: 'nick'}], period, 2, 2, targetType, '1000000')
+  await addGoal.wait()
+  console.log('goal 2 added')
 }
 
 // We recommend this pattern to be able to use async/await everywhere

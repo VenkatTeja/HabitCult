@@ -11,7 +11,7 @@ import { ContractService } from '../services/contract.service';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  constructor(private router: Router, private globalService: GlobalService, private contractService: ContractService, private loader: LoadingService) { }
+  constructor(private router: Router, public globalService: GlobalService, private contractService: ContractService, private loader: LoadingService) { }
   goals: any = [];
   money = {
     total: 0,
@@ -19,6 +19,11 @@ export class DashboardComponent implements OnInit {
     rewards: 5
   }
   ngOnInit(): void {
+    this.load()
+  }
+
+  async load() {
+    await this.globalService.waitForConnect()
     this.refreshGoals();
     this.getUserStake()
   }
@@ -35,8 +40,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getColors(i: number) {
-    let j = i%3
-    return ['#558CFF', '#93FFD8', '#ECDBBA'][j]
+    let j = i%5
+    return ['#558CFF', '#93FFD8', '#ECDBBA', '#F37171', '#7C33EB'][j]
   }
 
   async refreshGoals() {

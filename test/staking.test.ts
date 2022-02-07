@@ -33,7 +33,7 @@ describe("Staker", function () {
         // We use uniswap here to swap the matic tokens in addr1 to DAI (token of tokenAddress above) and send it to staker contract
         // Staker contract will need these tokens to send to beefy
         console.debug({beforeBal: await myLib.getTokenBalance(web3, token.addr, staker.address)})
-        await myLib.swapEthForTokens(web3, 20, token.addr, addr1, staker.address)
+        await myLib.swapEthForTokens(web3, '20000', token.addr, addr1, staker.address)
         let newBal = web3.utils.fromWei(await myLib.getTokenBalance(web3, token.addr, staker.address))
         console.debug({newBal})
         expect(newBal > 0, 'Token not filled')

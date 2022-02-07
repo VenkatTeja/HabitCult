@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "ganache": "ganache-cli -d -m \"sorry tumble insect until gift boat crucial until excite cinnamon jungle dawn\" -b 3 --networkId 1415 --chainId 115 -k istanbul",
-    "hardhat-node": "npx hardhat node --fork https://speedy-nodes-nyc.moralis.io/e814489705c92e61b62a5fbc/polygon/mainnet/archive --fork-block-number 24585576"
+    "hardhat-node": "npx hardhat node --fork https://speedy-nodes-nyc.moralis.io/e814489705c92e61b62a5fbc/polygon/mumbai --fork-block-number 24585576"
   },
   "keywords": [
     "crypto",

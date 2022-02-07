@@ -9,9 +9,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-5" style="background-color: #242424; border-radius: 5px;">
+        <div class="col-5">
             <div class="card bg-dark text-white" *ngIf="targetStatus != 2">
-                <div class="row">
+                <div style="width: 100%;display: flex;padding: 0 0 0 10px;">
                     <div class="col mt-3">
                         <h5 *ngIf="!isPass" class="card-title fw-bold">Unlock NFT</h5>
                         <h5 *ngIf="isPass" class="card-title fw-bold">NFT Unlocked</h5>
@@ -23,16 +23,14 @@
                     </div>
                 </div>
             </div>
-            <div class="card bg-dark text-white" *ngIf="targetStatus == 2 && nftDetails">
-                <div class="row">
-                    <div class="col mt-3">
-                        <h5 class="card-title fw-bold">NFT Unlocked</h5>
-                        <p>Congratulations</p>
-                    </div>
-                    <div class="col text-end">
-                        <img [src]="nftDetails.image"
-                            style="height: 160px; width: 180px; padding: 15px;" />
-                    </div>
+            <div class="row"  *ngIf="targetStatus == 2 && nftDetails">
+                <div class="col mt-3">
+                    <h5 class="card-title fw-bold">NFT Unlocked</h5>
+                    <p>Congratulations</p>
+                </div>
+                <div class="col text-end">
+                    <img [src]="nftDetails.image"
+                        style="height: 160px; width: 180px; padding: 15px;" />
                 </div>
             </div>
         </div>
@@ -82,7 +80,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card bg-dark p-4 mt-2">
+            <div class="card bg-dark p-4 mt-2" (click)="redirectToWebflow()">
                 <div class="row align-items-center">
                     <div class="col-2">
                         <mat-icon>autorenew</mat-icon>
@@ -98,6 +96,10 @@
             <div class="mt-2" *ngIf="targetStatus<2">
                 <button type="button" (click)="endGoal()" style="width: 100%; border: 1px solid #EB5757; padding: 10px;"
                     class="btn btn-outline-danger">END GOAL AND WITHDRAW</button>
+            </div>
+            <div class="mt-2" *ngIf="targetStatus==2 || targetStatus==3">
+                <button type="button" (click)="gotoEndPage()" style="width: 100%; border: 1px solid #ebe957; padding: 10px;"
+                    class="btn btn-outline-danger">ACTIONS</button>
             </div>
             <div *ngIf="targetStatus<2" class="mt-2 text-center" style="opacity: 0.5; font-size: small;">
                 Penalty of 5% will be levied upon the staking amount

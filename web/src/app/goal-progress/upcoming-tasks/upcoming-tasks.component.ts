@@ -23,6 +23,7 @@ export class UpcomingTasksComponent implements OnInit {
   }
 
   async ngOnInit() {
+    await this.globalService.waitForConnect()
     await this.getGoalDetails(this.goalId)
     let res = await this.contractService.getPeriodsToLog(this.goalId)
     if (res.length && res[0] && res[0].length) {
@@ -30,6 +31,7 @@ export class UpcomingTasksComponent implements OnInit {
     }
     console.log({period2: res});
     let res1
+    this.upcomingTasks = []
     try {
       res1 = Number(await this.contractService.getCurrentBlockToLog(this.goalId))
       console.log(Number(res1));
@@ -53,8 +55,12 @@ export class UpcomingTasksComponent implements OnInit {
       }
     }
     console.log(this.upcomingTasks);
-    
+    // this.setIntervalToFetch()
   }
+
+  // setIntervalToFetch() {
+  //   setInterval(() => this.ngOnInit(), 10000)
+  // }
 
   async hasUserLogged(id: number) {
     let vote = await this.globalService.GoalManagerContract.functions.getLoggedEvents(id, this.globalService.accounts[0], 0)
@@ -64,9 +70,9 @@ export class UpcomingTasksComponent implements OnInit {
     try {
       this.loader.loaderStart()
       await this.contractService.logActivity(this.goalId, this.frequency)
-      const {result} = await this.contractService.getGoalDetails(this.goalId)
-      console.log({result})
-      if (result[0] && result[0].isPass) {
+      const {result, target} = await this.contractService.getGoalDetails(this.goalId)
+      console.log({result: result[0], target: target[0]})
+      if (target[0] && (target[0].targetStatus==2 && target[0].targetStatus==3) && result[0] && result[0].isPass) {
         this.router.navigate([`end-of-goal/${this.goalId}`])
       }
       this.loader.loaderEnd()

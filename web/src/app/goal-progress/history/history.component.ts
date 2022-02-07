@@ -17,6 +17,7 @@ export class HistoryComponent implements OnInit {
   }
 
   async ngOnInit() {
+    await this.globalService.waitForConnect()
     await this.getGoalDetails(this.goalId)
     let res = await this.contractService.getPeriodsToLog(this.goalId)
     if (res.length && res[0] && res[0].length) {
@@ -32,6 +33,7 @@ export class HistoryComponent implements OnInit {
       return;
     }
     console.log(res1);
+    this.history = []
     for (let i = 0; i<res.length;i++) {
       let block = res[i]
       console.log('checking block', res1, block, res1>block, this.validators.length)
@@ -51,8 +53,12 @@ export class HistoryComponent implements OnInit {
       }
     }
     console.log(this.history);
-    
+    // this.setIntervalToFetch()
   }
+
+  // setIntervalToFetch() {
+  //   setInterval(() => this.ngOnInit(), 10000)
+  // }
 
   async getGoalDetails(id: number) {
     const goalDetails = await this.contractService.getGoalDetails(id)

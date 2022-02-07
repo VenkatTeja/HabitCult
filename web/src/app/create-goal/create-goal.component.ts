@@ -16,19 +16,27 @@ export interface User {
   styleUrls: ['./create-goal.component.scss']
 })
 export class CreateGoalComponent implements OnInit {
-  betAmount = 10; // USDT
+  betAmount = 10; // USDT/USDC
   isTokenAllowed = false;
   public createGoalForm!: FormGroup;
   submitted = false
   categories: any[] = []
 
-  constructor(private globalService: GlobalService, private contractService: ContractService, private formBuilder: FormBuilder, private loader: LoadingService, private router: Router) { }
+  constructor(public globalService: GlobalService, private contractService: ContractService, private formBuilder: FormBuilder, private loader: LoadingService, private router: Router) { }
   get form() { return this.createGoalForm.controls; }
 
   ngOnInit(): void {
     this.checkTokenAllowance()
     this.reset()
     this.getCategories()
+  }
+
+  async getCategories() {
+    this.categories = await this.contractService.getCategories()
+  }
+
+  redirectToWebflow() {
+    window.location.href = 'https://habitcult.webflow.io/'
   }
 
   async reset() {
@@ -40,7 +48,7 @@ export class CreateGoalComponent implements OnInit {
       goalDescription: '',
       durationOfGoal: [null, [Validators.required]],
       frequency: [null, [Validators.required]],
-      targetType: [0, [Validators.required]],
+      targetType: [null, [Validators.required]],
       betAmount: [null, [Validators.required]],
       validatorName1: '',
       validatorAddress1: '',
@@ -55,9 +63,6 @@ export class CreateGoalComponent implements OnInit {
     });
   }
 
-  async getCategories() {
-    this.categories = await this.contractService.getCategories()
-  }
   async checkHash() {
     let hash = "0x25f73b12a8846380999720490beba33b4b11aeb7b77fd6474b78670e0cd91e16"
     let tx = await this.globalService.provider.getTransactionReceipt(hash)
@@ -68,10 +73,10 @@ export class CreateGoalComponent implements OnInit {
     try {
       this.loader.loaderStart()
       await this.globalService.waitForConnect()
-  
+
       // Check if token is already allowed
       let allowance: BigNumber[] = await this.globalService.TokenContract.functions.allowance(await this.globalService.signer.getAddress(), this.globalService.CultManagerAddress);
-  
+
       let inWei = ethers.utils.parseUnits(this.betAmount.toString(), this.globalService.TokenDecimals)
       let weiToEther = ethers.utils.formatUnits(inWei, this.globalService.TokenDecimals)
       console.log({ betAmount: this.betAmount.toString(), inWei: inWei.toString(), weiToEther, allownace: allowance[0].toNumber() })
@@ -89,7 +94,7 @@ export class CreateGoalComponent implements OnInit {
   }
 
   fillMe() {
-    this.createGoalForm.patchValue({address: this.globalService.accounts[0]})
+    this.createGoalForm.patchValue({ address: this.globalService.accounts[0] })
   }
 
   async approveToken() {
@@ -113,7 +118,7 @@ export class CreateGoalComponent implements OnInit {
   }
 
   parseValidator(validators: User[], index: number) {
-    if(this.createGoalForm.value[`validatorAddress${index}`])
+    if (this.createGoalForm.value[`validatorAddress${index}`])
       validators.push({
         nick: this.createGoalForm.value[`validatorName${index}`],
         addr: this.createGoalForm.value[`validatorAddress${index}`],
@@ -144,7 +149,7 @@ export class CreateGoalComponent implements OnInit {
         validators = this.parseValidator(validators, 3)
         validators = this.parseValidator(validators, 4)
         validators = this.parseValidator(validators, 5)
-        console.log('add goal', {name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount})
+        console.log('add goal', { name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount })
         let addGoal = await this.globalService.CultManagerContract.connect(this.globalService.signer).functions.addGoal(name, objectiveInWords, category, participant, validators, period, eventsPerPeriod, nPeriods, targetType, betAmount)
         console.log(addGoal)
         await addGoal.wait(2)

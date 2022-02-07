@@ -1,6 +1,6 @@
 <div class="container text-white py-5">
     <div class="row gx-2">
-        <div class="rounded col-md-6 bg-dark p-3 mx-2 mb-4" style="display: flex; justify-content: space-between;">
+        <div class="rounded col-md-6 bg-dark p-3 mx-2 mb-4" style="display: flex; justify-content: space-between; float: left;">
             <div>
                 <h1 style="font-size: 60px;" class="fw-bolder">{{states[targetStatus].primary}}</h1>
                 <p class="text-secondary ">{{states[targetStatus].secondary}}</p>
@@ -9,20 +9,20 @@
                 src={{states[targetStatus].img}}
                 alt="tickmark">
         </div>
-        <div class="rounded col-md-5 bg-dark p-3 mx-2 mb-4" style="display: flex; justify-content: space-between;">
+        <div class="rounded col-md-5 bg-dark p-3 mx-2 mb-4" style="display: flex; justify-content: space-between; width: 45%; float: left;" *ngIf="targetStatus == 2 && nftDetails">
             <div>
                 <h3 class="fw-bolder">NFT Unlocked!</h3>
-                <p style="max-width: 10em;" class="text-secondary">Get access to exclusive merch and more 👀</p>
+                <p style="max-width: 10em;" class="text-secondary">You were amazing!</p>
             </div>
             <img style="width:7em; height: 7em;"
-                src="https://gigaland.io/images/carousel/crs-7.jpg"
+                [src]="nftDetails.image"
                 alt="tickmark">
         </div>
     </div>
     <div class="row gx-2">
         <div class="rounded col-md bg-dark p-3 mx-2">
             <h5 class="fw-light text-secondary">Current funds</h5>
-            <h1 class="fw-bolder">$1,206.88</h1>
+            <h1 class="fw-bolder">${{stakingAmount}}</h1>
         </div>
         <div class="rounded col-md bg-dark p-3 mx-2">
             <div class="row">
@@ -46,9 +46,11 @@
                 </div>
             </div>
         </div>
-        <div class="rounded col-md bg-dark p-3 mx-2">
+        <div class="rounded col-md bg-dark p-3 mx-2" style="cursor: pointer; display: flex; align-items: center;" (click)="redirectToWebflow()">
             <h2 class="fw-bolder">HOW IT <br /> WORKS</h2>
-            <a class="text-primary" style="cursor: pointer;">read more</a>
+            <div class="col text-end">
+                <mat-icon>east</mat-icon>
+            </div>
         </div>
     </div>
     <div style="margin-bottom: 10px;" class="col mt-4 d-flex justify-content-center">

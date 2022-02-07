@@ -39,7 +39,7 @@ describe("GoalNFT", function () {
         // FILL token in signer wallet
         let balBefore = myLib.getEtherNumber(web3, await myLib.getTokenBalance(web3, token.addr, addr1.address), token.decimals)
         console.debug({balBefore})
-        await myLib.swapEthForTokens(web3, 10, token.addr, addr1, addr1.address)
+        await myLib.swapEthForTokens(web3, '10000', token.addr, addr1, addr1.address)
         let newBal = myLib.getEtherNumber(web3, await myLib.getTokenBalance(web3, token.addr, addr1.address), token.decimals)
         expect(parseFloat(newBal) > 0, 'Token not filled')
         console.debug({newBal})

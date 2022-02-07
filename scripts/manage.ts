@@ -1,3 +1,8 @@
+// GoalManager Contract deployed to: 0x3C368B86AF00565Df7a3897Cfa9195B9434A59f9
+// CultManager Contract deployed to: 0x3BB898B4Bbe24f68A4e9bE46cFE72D1787FD74F4
+// GoalNFT Contract deployed to: 0x117814AF22Cb83D8Ad6e8489e9477d28265bc105
+// Staking Contract deployed to: 0x29b2440db4A256B0c1E6d3B4CDcaA68E2440A08f
+
 // We require the Hardhat Runtime Environment explicitly here. This is optional
 // but useful for running the script in a standalone fashion through `node <script>`.
 //
@@ -9,7 +14,7 @@ import Web3 from 'web3'
 import * as dotenv from "dotenv";
 dotenv.config();
 
-let url: any = process.env.ROPSTEN_URL
+let url: any = process.env.POLYGON_URL
 const web3 = new Web3(url);
 
 async function main() {
@@ -24,42 +29,12 @@ async function main() {
   const result = await ethers.getSigners();
   let user = result[0]
   console.log(user.address)
-  const Staker = await ethers.getContractFactory("Staker");
-  const staker = await Staker.deploy();
 
-  let token = myLib.TOKENS.USDC_TESTNET;
-
-  const GoalManager = await ethers.getContractFactory("GoalManager");
-  const goalManager = await GoalManager.deploy(token.addr);
-
-  const CultManager = await ethers.getContractFactory("CultManager");
-  const cultManager = await CultManager.deploy(goalManager.address);
-
-  const GoalNFT = await ethers.getContractFactory("GoalNFT");
-  const goalNFT = await GoalNFT.deploy("https://gateway.pinata.cloud/ipfs/");
-
-  console.log("Mining...")
-  await staker.deployed();
-  await cultManager.deployed();
-  await goalNFT.deployed();
-  await goalManager.deployed();
-
-  console.log("GoalManager Contract deployed to:", goalManager.address);
-  console.log("CultManager Contract deployed to:", cultManager.address);
-  console.log("GoalNFT Contract deployed to:", goalNFT.address);
-  console.log("Staking Contract deployed to:", staker.address);
-  console.log('\n=============================')
-
-  let setParent = await goalManager.connect(user).setParent(cultManager.address);
-  await setParent.wait()
-
-  let transfer = await goalNFT.transferOwnership(cultManager.address)
-  await transfer.wait()
-  console.log('ownership set')
+  let token = myLib.TOKENS.USDT;
 
   // FILL user wallet with USDT
   let balBefore = myLib.getEtherNumber(web3, await myLib.getTokenBalance(web3, token.addr, user.address), token.decimals)
-  await myLib.swapEthForTokens(web3, '100', token.addr, user, user.address, myLib.TOKENS.MATIC_TESTNET.addr)
+  await myLib.swapEthForTokens(web3, '100', token.addr, user, user.address)
   let tokenBal = await myLib.getTokenBalance(web3, token.addr, user.address)
   let newBal = myLib.getEtherNumber(web3, tokenBal, token.decimals)
   if(parseFloat(newBal) > 0) {
