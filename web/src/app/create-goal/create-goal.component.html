@@ -16,7 +16,7 @@
                         [ngClass]="{ 'invalid-input': submitted && form.address.errors }"
                         style="width: 80%;line-height: 1; background-color: #191919;color: #FFFFFF; border-color: #191919;"
                         placeholder="Participant wallet address" />
-                    <button style="width: 20%;" (click)="fillMe()">Me</button>
+                    <button style="width: 20%;" class="btn btn-primary" style="background-color: rgba(124, 51, 235, 1) !important; border: 1px solid rgba(124, 51, 235, 1);" (click)="fillMe()">Me</button>
                 </div>
                 <span *ngIf="submitted && form && form.address.errors && form.address.errors.required"
                     class="invalid-feedback">Address is required</span>
@@ -48,7 +48,7 @@
                 placeholder="Goal Description"></textarea>
             <div class="input-group">
                 <span class="input-group-text"
-                    style="background-color: rgba(0, 0, 0, 0.6);color: #FFFFFF; border-color: rgba(0, 0, 0, 0.6); padding-left: 2px;"
+                    style="background-color: rgba(0, 0, 0, 0);color: #FFFFFF; border-color: rgba(0, 0, 0, 0); padding-left: 2px;"
                     id="inputGroup-sizing-default">Duration of goal (in weeks)</span>
                 <input type="number" [ngClass]="{ 'invalid-input': submitted && form.durationOfGoal.errors }"
                     formControlName="durationOfGoal" class="form-control" aria-label="Sizing example input"
@@ -69,7 +69,7 @@
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="inputGroup-sizing-default"
-                    style="background-color: rgba(0, 0, 0, 0.6);color: #FFFFFF; border-color: rgba(0, 0, 0, 0.6); padding-left: 2px;">Frequency
+                    style="background-color: rgba(0, 0, 0, 0);color: #FFFFFF; border-color: rgba(0, 0, 0, 0); padding-left: 2px;">Frequency
                     of event</span>
                 <input type="number" [ngClass]="{ 'invalid-input': submitted && form.frequency.errors }"
                     class="form-control" aria-label="Sizing example input" formControlName="frequency"
@@ -85,7 +85,7 @@
             style="background-color: rgba(0, 0, 0, 0.6); padding: 20px;border-radius: 5px; margin-top: 10px;margin-bottom: 10px;">
             <div class="input-group">
                 <span class="input-group-text" id="inputGroup-sizing-default"
-                    style="background-color: rgba(0, 0, 0, 0.6);color: #FFFFFF; border-color: rgba(0, 0, 0, 0.6); padding-left: 2px;">Staking
+                    style="background-color: rgba(0, 0, 0, 0);color: #FFFFFF; border-color: rgba(0, 0, 0, 0); padding-left: 2px;">Staking
                     Amount</span>
                 <input [(ngModel)]="betAmount" type="number" min="1" max="1000" (change)="checkTokenAllowance()" class="form-control" aria-label="Sizing example input"
                     formControlName="betAmount" [ngClass]="{ 'invalid-input': submitted && form.betAmount.errors }"
@@ -144,7 +144,7 @@
     </div>
     <div class="col text-center" style="max-width: 45%;">
         <div class="col" style="padding: 20px; color: #FFFFFF;">
-            <button type="submit" style="width: 60%;" class="btn btn-primary" (click)="createGoal()"
+            <button type="submit" style="width: 60%;background-color: rgba(124, 51, 235, 1) !important; border: 1px solid rgba(124, 51, 235, 1);" class="btn btn-primary" (click)="createGoal()"
                 *ngIf="isTokenAllowed">CREATE GOAL</button>
             <button type="submit" style="width: 60%;" class="btn btn-primary" (click)="approveToken()"
                 *ngIf="!isTokenAllowed">Approve {{globalService.TokenName}}</button>
