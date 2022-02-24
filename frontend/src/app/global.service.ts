@@ -1,10 +1,11 @@
 // import Web3 from 'web3';
 import { Injectable } from '@angular/core';
 import { ethers, Signer } from 'ethers';
-const cultManagerJs = require('../../../artifacts/contracts/CultManager.sol/CultManager.json');
-const goalManagerJS = require('../../../artifacts/contracts/GoalManager.sol/GoalManager.json');
-const goalNFTJS = require('../../../artifacts/contracts/GoalNFT.sol/GoalNFT.json');
 import { CultManager } from '../../../typechain/CultManager';
+
+const cultManagerJs = require('./abis/CultManager.json');
+const goalManagerJS = require('./abis/GoalManager.json');
+const goalNFTJS = require('./abis/GoalNFT.json');
 const IERC20 = require('./abis/IERC20.abi.json');
 
 @Injectable({
