@@ -1,16 +1,17 @@
 // import Web3 from 'web3';
 import { Injectable } from '@angular/core';
 import { ethers, Signer } from 'ethers';
-import { CultManager } from '../../../typechain/CultManager';
 
-const cultManagerJs = require('./abis/CultManager.json');
-const goalManagerJS = require('./abis/GoalManager.json');
-const goalNFTJS = require('./abis/GoalNFT.json');
-const IERC20 = require('./abis/IERC20.abi.json');
+import { CultManager } from './utils/typechain/CultManager';
+const cultManagerJs = require('./utils/abis/CultManager.json');
+const goalManagerJS = require('./utils/abis/GoalManager.json');
+const goalNFTJS = require('./utils/abis/GoalNFT.json');
+const IERC20 = require('./utils/abis/IERC20.abi.json');
 
 @Injectable({
   providedIn: 'root'
 })
+  
 export class GlobalService {
   // web3 = new Web3('http://localhost:8545');
   provider = new ethers.providers.Web3Provider(window.ethereum);
