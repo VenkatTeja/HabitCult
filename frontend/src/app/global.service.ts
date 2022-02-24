@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { ethers, Signer } from 'ethers';
 
-import { CultManager } from './utils/typechain/CultManager';
+// import { CultManager } from './utils/typechain/CultManager';
 const cultManagerJs = require('./utils/abis/CultManager.json');
 const goalManagerJS = require('./utils/abis/GoalManager.json');
 const goalNFTJS = require('./utils/abis/GoalNFT.json');
