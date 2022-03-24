@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit {
   async getUSDC() {
     try {
       const res = await this.globalService.USDCContract.connect(this.globalService.signer).functions.getMonies()
-      console.log(res)
+      if (res) alert('300 USDC successfully credited to your wallet')
     } catch(err: any) {
       console.log(err.data)
       if (err.message === 'Internal JSON-RPC error.') {
