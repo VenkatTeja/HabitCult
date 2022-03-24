@@ -6,6 +6,7 @@ const cultManagerJs = require('./utils/abis/CultManager.json');
 const goalManagerJS = require('./utils/abis/GoalManager.json');
 const goalNFTJS = require('./utils/abis/GoalNFT.json');
 const IERC20 = require('./utils/abis/IERC20.abi.json');
+const usdcFaucet = require('./utils/abis/USDCFaucet.json')
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class GlobalService {
   CultManagerAddress = '0xb202ADE14fF28C88fa23a37F252e6DaEAe34B488'; // update this
   GoalManagerAddress = '0x28b5F469B9763b940D4F9AD2840A59660Cb7Fd60';
   NFTAddress = "0x9e37B05D17e4A83855A9d340B608e19F45c58ec9"
+  USDCFaucetAddress = "0x2ad7Dfd8e2a0877313AdCf5f50f261C0cC89aDC2"
 
   StakeCoin = '0xc2132d05d31c914a87c6611c10748aeb04b58e8f';
   TokenDecimals = 6;
@@ -48,6 +50,12 @@ export class GlobalService {
       this.GoalManagerAddress,
       goalManagerJS.abi,
       this.provider
+  )
+
+  USDCContract = new ethers.Contract(
+    this.USDCFaucetAddress,
+    usdcFaucet.abi,
+    this.provider
   )
 
   public accounts: string[] = [];

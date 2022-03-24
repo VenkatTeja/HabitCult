@@ -27,4 +27,18 @@ export class HeaderComponent implements OnInit {
     await this.globalService.connectMetamask()
   }
 
+  async getUSDC() {
+    try {
+      const res = await this.globalService.USDCContract.connect(this.globalService.signer).functions.getMonies()
+      console.log(res)
+    } catch(err: any) {
+      console.log(err.data)
+      if (err.message === 'Internal JSON-RPC error.') {
+        alert(err.data.message)
+      } else {
+        alert(err.message)
+      }
+    }
+  }
+
 }

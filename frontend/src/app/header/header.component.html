@@ -23,20 +23,23 @@
                 </li> -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle disabled" style="font-size: 14px; border: 1px solid grey; margin-right: 20px; border-radius: 5px; padding: 5px" href="#" id="navbarDropdownMenuLink" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="./assets/images/polygon.png" width="20" height="20" style="margin-right: 5px;margin-bottom: 2px;">
-                        Polygon Mumbai
-                    </a>
-                    <!-- <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Binance</a></li>
-                        <li><a class="dropdown-item" href="#">Etheruem</a></li>
-                        <li><a class="dropdown-item" href="#">Hathor</a></li>
-                    </ul> -->
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-outline-primary" style="font-size: 14px;" type="submit" (click)="connectMetamask()" *ngIf="globalService.accounts.length==0">CONNECT</button>
-                    <button class="btn btn-outline-primary" style="font-size: 14px;" type="submit" (click)="connectMetamask()" *ngIf="globalService.accounts.length>0">{{globalService.accounts[0].substring(0, 4)}}...{{globalService.accounts[0].substring(globalService.accounts[0].length-4)}}</button>
-                </li>
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="./assets/images/polygon.png" width="20" height="20" style="margin-right: 5px;margin-bottom: 2px;">
+                    Polygon Mumbai
+                </a>
+                <!-- <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <li><a class="dropdown-item" href="#">Binance</a></li>
+                    <li><a class="dropdown-item" href="#">Etheruem</a></li>
+                    <li><a class="dropdown-item" href="#">Hathor</a></li>
+                </ul> -->
+            </li>
+            <li class="nav-item">
+                <button class="btn btn-outline-primary" style="font-size: 14px;" type="submit" (click)="connectMetamask()" *ngIf="globalService.accounts.length==0">CONNECT</button>
+                <button class="btn btn-outline-primary" style="font-size: 14px;" type="submit" (click)="connectMetamask()" *ngIf="globalService.accounts.length>0">{{globalService.accounts[0].substring(0, 4)}}...{{globalService.accounts[0].substring(globalService.accounts[0].length-4)}}</button>
+            </li>
+            <li class="nav-item">
+                <button class="btn btn-outline-primary" style="font-size: 14px; margin-left: 20px;" type="submit" (click)="getUSDC()">GetUSDC</button>
+            </li>
             </ul>
         </div>
     </div>
